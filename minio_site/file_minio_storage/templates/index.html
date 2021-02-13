@@ -14,4 +14,6 @@
 
 <p>You can add file this <a href="{% url 'upload' %}">way</a></p>
 
+<p>You have visited this page {{ num_visits }}{% if num_visits == 1 %} time{% else %} times{% endif %}.</p>
+
 {% endblock %}
