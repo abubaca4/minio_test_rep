@@ -18,7 +18,7 @@
         upload_link += "?file_name=" + fileInput.files[0].name;
         upload_link += '&' + "visible_name=" + visible_name;
 
-        fetch(upload_link).then(res => res.text()).then(MinIoUrl => {
+        fetch(upload_link, {credentials: 'include',}).then(res => res.text()).then(MinIoUrl => {
             fetch(MinIoUrl, {
                 method: 'PUT',
                 body: file,
