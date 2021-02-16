@@ -8,7 +8,7 @@
             "name": "Python: Django",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/minio_site/manage.py",
+            "program": "${workspaceFolder}/minio_ecg/manage.py",
             "args": [
                 "runserver",
                 "0:8080"
