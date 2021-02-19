@@ -16,7 +16,7 @@ middle_name = CharField(max_length=50, help_text="Отчество", null=True, 
 
 cardiac_pathology:
 name CharField(max_length=100, unique=True, help_text="Название патологии")
-short_name CharField(max_length=20, unique=True, help_text="Короткое название", null=True, blank = True) #не уверен даст ли сделать несколько пустых названий(предполагается что это поле используется только когда основное название слишком длинное)
+short_name CharField(max_length=20, help_text="Короткое название", null=True, blank = True) #не уверен даст ли сделать несколько пустых названий(предполагается что это поле используется только когда основное название слишком длинное)
 
 access_groups:
 description TextField(help_text="Информация о группе доступа")
@@ -29,7 +29,7 @@ ecg:
 check_date DateField(help_text="Дата снятия показаний", null=True, blank = True)
 add_date DateField(help_text="Дата внесения в систему", auto_now_add=True)
 patient_age IntegerField(help_text="Возраст пациэнта на момент снятия показаний(для показаний не имеющих даты рождения пациента)", null=True, blank = True, validators=[MinValueValidator(0), MaxValueValidator(150)])
-patient_id ForeignKey(patients, on_delete=models.CASCADE, help_text="Пациент которому принадлежит экг")
+patient_id ForeignKey(patients, models.SET_NULL, blank=True, null=True, help_text="Пациент которому принадлежит экг")
 source_user ForeignKey(user, models.SET_NULL, blank=True, null=True, help_text="Пользователь, загрузивший экг на сайт")
 access_id ForeignKey(access_groups, models.SET_NULL, blank=True, null=True, help_text="Группа доступа к которой принадлежит экг")
 org_id ForeignKey(source_org, models.SET_NULL, blank=True, null=True, help_text="Организация от которой получено экг")
