@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'minio_ecg',
         'USER': 'admin',
-        'PASSWORD': 'test',
+        'PASSWORD': '?zfQn[{wp;<%3MKq',
         'HOST': '127.0.0.1',
         'PORT': '32769',
     }
