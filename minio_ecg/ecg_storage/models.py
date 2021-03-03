@@ -41,7 +41,7 @@ class cardiac_pathology(models.Model):
 
 class access_groups(models.Model):
     name = models.CharField(max_length=100, unique=True, help_text="Название группы")
-    description = models.TextField(help_text="Информация о группе доступа")
+    description = models.TextField(help_text="Информация о группе доступа", null=True, blank = True)
 
     class Meta:
         ordering = ["-name"]
@@ -55,7 +55,7 @@ class user_access(models.Model):
 
 class ecg(models.Model):
     check_date = models.DateField(help_text="Дата снятия показаний", null=True, blank = True)
-    add_date = models.DateField(help_text="Дата внесения в систему", auto_now_add=True)
+    add_date = models.DateTimeField(help_text="Дата внесения в систему", auto_now_add=True)
     patient_age = models.IntegerField(help_text="Возраст пациэнта на момент снятия показаний(для показаний не имеющих даты рождения пациента)", null=True, blank = True, validators=[validators.MinValueValidator(0), validators.MaxValueValidator(150)])
     patient_id = models.ForeignKey(patients, models.SET_NULL, blank=True, null=True, help_text="Пациент которому принадлежит экг")
     source_user = models.ForeignKey(User, models.SET_NULL, blank=True, null=True, help_text="Пользователь, загрузивший экг на сайт")
@@ -94,7 +94,7 @@ class ecg_tasks(models.Model):
 class ecg_conclusion(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     ecg_id = models.ForeignKey(ecg, on_delete=models.CASCADE)
-    date_time = models.DateField(help_text="Дата вынесения заключения", auto_now_add=True)
+    date_time = models.DateTimeField(help_text="Дата вынесения заключения", auto_now_add=True)
     comment = models.TextField(help_text="Текстовое заключение", null=True, blank = True)
 
     class Meta:
