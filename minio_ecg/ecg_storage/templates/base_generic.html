@@ -31,10 +31,10 @@
             <div class="col-sm-2">
                 {% block sidebar %}
                 <ul class="sidebar-nav">
-                    <li><a href="{% url 'index' %}">Домашнаяя страница</a></li>
+                    <li><a href="{% url 'index' %}">Домашняя страница</a></li>
                     <li><a href="{% url 'admin:index' %}">Панель администратора</a></li>
                     {% if user.is_authenticated %}
-                        <li>User: {{ user.get_username }}</li>
+                        <li>Пользователь: {{ user.get_username }}</li>
                         <li><a href="{% url 'logout'%}?next={{request.path}}">Выход</a></li>
                     {% else %}
                         <li><a href="{% url 'login'%}?next={{request.path}}">Вход</a></li>

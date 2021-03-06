@@ -12,7 +12,7 @@ class source_org(models.Model):
         ordering = ["-name"]
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 class patients(models.Model):
     sex_list = [('N', 'Не задан'), ('M','Мужской'), ('F', 'Женский')]
@@ -37,7 +37,7 @@ class cardiac_pathology(models.Model):
         ordering = ["-name"]
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 class access_groups(models.Model):
     name = models.CharField(max_length=100, unique=True, help_text="Название группы")
@@ -47,7 +47,7 @@ class access_groups(models.Model):
         ordering = ["-name"]
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 class user_access(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -66,7 +66,7 @@ class ecg(models.Model):
         ordering = ["-add_date"]
 
     def __str__(self):
-        return self.add_date
+        return str(self.add_date)
 
 class ecg_files(models.Model):
     ecg_id = models.ForeignKey(ecg, on_delete=models.CASCADE)
@@ -79,7 +79,7 @@ class ecg_files(models.Model):
         ordering = ["-file_name"]
 
     def __str__(self):
-        return self.file_name
+        return str(self.file_name)
 
 class original_information(models.Model):
     ecg_id = models.ForeignKey(ecg, on_delete=models.CASCADE)
@@ -101,7 +101,7 @@ class ecg_conclusion(models.Model):
         ordering = ["-date_time"]
 
     def __str__(self):
-        return self.date_time
+        return str(self.date_time)
 
 class conclusion_pathology(models.Model):
     conclusion_id = models.ForeignKey(ecg_conclusion, on_delete=models.CASCADE)
