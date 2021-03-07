@@ -14,7 +14,7 @@
     uploadBtn.onclick = function (evt) {
         var file = fileInput.files[0];
         var visible_name = name_fild.value;
-        var upload_link = "{{ request.path }}" + "get_link/";
+        var upload_link = "{% url 'get_upload_link' %}";
         upload_link += "?file_name=" + fileInput.files[0].name;
         upload_link += '&' + "visible_name=" + visible_name;
 

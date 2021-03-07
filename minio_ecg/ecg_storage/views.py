@@ -1,5 +1,7 @@
 from django.shortcuts import render
 
+from .models import ecg
+
 # Create your views here.
 
 def index(request):
@@ -7,4 +9,18 @@ def index(request):
         request,
         'index.html',
         context={},
+    )
+
+def add(request):
+    return render(
+        request,
+        'add.html',
+        context={},
+    )
+
+def add_ecg_file(request):
+    return render(
+        request,
+        'ecg_file.html',
+        context={'ecg_list': ecg.objects.all()},
     )

@@ -30,7 +30,7 @@ def upload(request):
 
 def all_files(request):
     client = Minio(
-        "localhost:32768",
+        "172.23.0.7:32768",
         access_key="FAO5WMCSNYII9GNHMEVV6KX4",
         secret_key="rU7dkiJh4XN3dEoXeI9E2wdnIIUdZS9JuyFhG3F7r2UicIVU",
         secure=False,

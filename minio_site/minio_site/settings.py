@@ -26,7 +26,7 @@ SECRET_KEY = 'uioevcyr3hl+fe%lojx+t&q+p#^#)2egnz3@%t4sem(7@tchn5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['user-virtualbox.lan', 'localhost']
+ALLOWED_HOSTS = ['172.23.0.7', 'localhost']
 
 
 # Application definition
