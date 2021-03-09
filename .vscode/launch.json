@@ -11,7 +11,7 @@
             "program": "${workspaceFolder}/minio_ecg/manage.py",
             "args": [
                 "runserver",
-                "0:8080"
+                "172.23.0.7:8080"
             ],
             "django": true
         }

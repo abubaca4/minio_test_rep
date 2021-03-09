@@ -27,3 +27,11 @@ def add_ecg_file(request):
         'upload_file.html',
         context={'ecg_list': ecg.objects.all()},
     )
+
+
+def common_list(request):
+    return render(
+        request,
+        'list_of_lists.html',
+        context={},
+    )
