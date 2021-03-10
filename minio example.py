@@ -12,7 +12,7 @@ def main():
         secret_key="rU7dkiJh4XN3dEoXeI9E2wdnIIUdZS9JuyFhG3F7r2UicIVU",
         secure=False,
     )
-
+    """
     # Make 'asiatrip' bucket if not exist.
     found = client.bucket_exists("test")
     if not found:
@@ -34,7 +34,7 @@ def main():
         "example.txt",
         expires=timedelta(hours=2),
     )
-    print("link to file: " + url)
+    print("link to file: " + url) """
     url = client.presigned_put_object("test", "jar.7z")
     print(url)
 
