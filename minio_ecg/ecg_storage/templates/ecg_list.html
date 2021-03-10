@@ -1,0 +1,17 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Список доступных экг</h1>
+<table class="table">
+    <tr>
+        <td>ID</td>
+        <td>Дата внесения в систему</td>
+    </tr>
+    {% for copies in ecg_list %}
+    <tr>
+        <td>{{copies.id}}</td>
+        <td>{{copies.add_date}}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

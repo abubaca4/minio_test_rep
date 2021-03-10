@@ -1,6 +1,9 @@
+from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import User
 from django.core import validators
+from minio import Minio
+from django.conf import settings
 
 # Create your models here.
 
@@ -106,6 +109,26 @@ class ecg_files(models.Model):
 
     def __str__(self):
         return str(self.file_name)
+
+    def get_minio_download_link(self, link_live_duration: timedelta = None) -> str:
+        client = Minio(
+            settings.MINIO_URL,
+            access_key=settings.MINIO_ACCESS_KEY,
+            secret_key=settings.MINIO_SECRET_KEY,
+            secure=False,
+        )
+        url = None
+        if link_live_duration == None:
+            url = client.presigned_get_object(
+                settings.MINIO_ECG_BUCKET,
+                self.file_name)
+        else:
+            url = client.presigned_get_object(
+                settings.MINIO_ECG_BUCKET,
+                self.file_name,
+                expires=link_live_duration,
+            )
+        return url
 
 
 class original_information(models.Model):
