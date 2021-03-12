@@ -98,17 +98,20 @@ class ecg(models.Model):
 class ecg_files(models.Model):
     ecg_id = models.ForeignKey(ecg, on_delete=models.CASCADE)
     format = models.CharField(
-        max_length=20, help_text="Тип файла", null=True, blank=True)
-    file_name = models.CharField(
-        max_length=1024, unique=True, help_text="Имя объекта в MinIo")
+        max_length=20, help_text="Тип файла")
+    file_hash = models.CharField(
+        max_length=40, unique=True, help_text="sha-1 хеш файла", validators=[validators.MaxLengthValidator(40), validators.MinLengthValidator(40)])
     sample_frequency = models.IntegerField()
     amplitude_resolution = models.IntegerField()
 
+    def file_name(self) -> str:
+        return (self.file_hash + '.' + self.format)
+
     class Meta:
-        ordering = ["-file_name"]
+        ordering = ["-file_hash"]
 
     def __str__(self):
-        return str(self.file_name)
+        return self.file_name()
 
     def get_minio_download_link(self, link_live_duration: timedelta = None) -> str:
         client = Minio(
@@ -121,11 +124,31 @@ class ecg_files(models.Model):
         if link_live_duration == None:
             url = client.presigned_get_object(
                 settings.MINIO_ECG_BUCKET,
-                self.file_name)
+                self.file_name())
         else:
             url = client.presigned_get_object(
                 settings.MINIO_ECG_BUCKET,
-                self.file_name,
+                self.file_name(),
+                expires=link_live_duration,
+            )
+        return url
+
+    def get_minio_upload_link(self, link_live_duration: timedelta = None) -> str:
+        client = Minio(
+            settings.MINIO_URL,
+            access_key=settings.MINIO_ACCESS_KEY,
+            secret_key=settings.MINIO_SECRET_KEY,
+            secure=False,
+        )
+        url = None
+        if link_live_duration == None:
+            url = client.presigned_put_object(
+                settings.MINIO_ECG_BUCKET,
+                self.file_name())
+        else:
+            url = client.presigned_put_object(
+                settings.MINIO_ECG_BUCKET,
+                self.file_name(),
                 expires=link_live_duration,
             )
         return url
