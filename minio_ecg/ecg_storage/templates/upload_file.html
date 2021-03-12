@@ -2,15 +2,26 @@
 
 {% block content %}
 <h1>Добавление новых файлов</h1>
-<label for="ecg_id_field">ID экг для которого загружается файл</label>
-<input type="text" id="ecg_id_field" class="form-control">
-<label for="sample_frequency_field">Sample frequency</label>
-<input type="text" id="sample_frequency_field" class="form-control">
-<label for="amplitude_resolution_field">Amplitude resolution</label>
-<input type="text" id="amplitude_resolution_field" class="form-control">
-<label for="ecg_file_select">Выбор файла</label>
-<input type="file" id="ecg_file_select" class="form-control-file mb-2">
-<button id="check_and_upload" class="btn btn-primary">Загрузить</button>
-{% load static %}
-<script src="{% static 'js/file_upload.js' %}"></script>
+<form>
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="ecg_id_field">ID экг для которого загружается файл</label>
+        <input type="text" id="ecg_id_field" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="sample_frequency_field">Sample frequency</label>
+        <input type="text" id="sample_frequency_field" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="amplitude_resolution_field">Amplitude resolution</label>
+        <input type="text" id="amplitude_resolution_field" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="ecg_file_select">Выбор файла</label>
+        <input type="file" id="ecg_file_select" class="form-control-file mb-2" required>
+    </div>
+    <button id="check_and_upload" class="btn btn-primary">Загрузить</button>
+    {% load static %}
+    <script src="{% static 'js/file_upload.js' %}"></script>
+</form>
 {% endblock %}
