@@ -1,9 +1,18 @@
-var ecg_id = document.getElementById('ecg_id_field');
-var sample_frequency = document.getElementById('sample_frequency_field');
-var amplitude_resolution = document.getElementById('amplitude_resolution_field');
-var fileInput = document.getElementById('ecg_file_select');
-var uploadBtn = document.getElementById('check_and_upload');
+var ecg_id = document.getElementById('id_ecg_id_field');
+var sample_frequency = document.getElementById('id_sample_frequency_field');
+var amplitude_resolution = document.getElementById('id_amplitude_resolution_field');
+var fileInput = document.getElementById('id_ecg_file_select');
+var file_hash = document.getElementById('id_file_hash');
+var file_format = document.getElementById('id_file_format');
 const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+//список полей и предназначенных для них списков ошибок
+let field_to_error_list = new Map();
+field_to_error_list.set('ecg_id_field', 'ecg_id_error_list');
+field_to_error_list.set('sample_frequency_field', 'sample_frequency_error_list');
+field_to_error_list.set('amplitude_resolution_field', 'amplitude_resolution_error_list');
+field_to_error_list.set('file_hash', 'ecg_file_error_list');
+field_to_error_list.set('file_format', 'ecg_file_error_list');
 
 //если crypto.subtle по той или иной причине не поддерживается подключить CryptoJS
 if (crypto.subtle == undefined) {
@@ -26,71 +35,66 @@ function arrayBufferToWordArray(ab) {
 }
 
 function CryptoJS_Get_Sha1_FromFile(inputFile) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = function (e) {
+    var reader = new FileReader();
+    reader.onload = (function () {
+        return async function (e) {
             const arrayBuffer = e.target.result;
             const hash = CryptoJS.SHA1(arrayBufferToWordArray(arrayBuffer));
-            const hashUint8 = new Uint8Array(hash);
-            const result = hashUint8.map((x) => ("00" + x.toString(16)).slice(-2)).join("");
-            resolve(result);
+            //преобразование ArrayBuffer к строке
+            file_hash.value = hash;
         };
-        reader.onerror = function (err) {
-            reject(err);
-        };
-        reader.readAsArrayBuffer(inputFile);
-    });
+    })();
+    //чтение файла
+    reader.readAsArrayBuffer(inputFile);
 }
 
 async function getFileHash_crypto(inputFile, hashAlgorithm) {
-    var hash;
-
     var reader = new FileReader();
     //назначение действия после полного чтения файла
-    reader.onload = (function (result) {
+    reader.onload = (function () {
         return async function (e) {
             //создание хеша средствами браузера может не поддерживаться в старых браузерах(или если соединение не https)
-            result = await crypto.subtle.digest(hashAlgorithm, e.target.result);
+            let result = await crypto.subtle.digest(hashAlgorithm, e.target.result);
+            //преобразование ArrayBuffer к строке
+            file_hash.value = Array.prototype.map.call(new Uint8Array(result), x => (('00' + x.toString(16)).slice(-2))).join('');
         };
-    })(hash);
+    })();
     //чтение файла
     reader.readAsArrayBuffer(inputFile);
-    //преобразование ArrayBuffer к строке
-    return Array.prototype.map.call(new Uint8Array(hash), x => (('00' + x.toString(16)).slice(-2))).join('');
 }
 
 async function getSHA_1FromFile(inputFile) {
     //использовать CryptoJS если crypto.subtle не поддерживается
-    let result;
     if (crypto.subtle == undefined) {
-        result = await CryptoJS_Get_Sha1_FromFile(inputFile);
+        await CryptoJS_Get_Sha1_FromFile(inputFile);
     } else {
-        result = await getFileHash_crypto(inputFile, 'SHA-1');
+        await getFileHash_crypto(inputFile, 'SHA-1');
     }
-    return result;
 }
 
-document.getElementById('ecg_upload_form').addEventListener("submit", async function (evt) {
-    //запрет стандартного действия после нажатия sumbit
-    evt.preventDefault();
-
-    //получение хеша файла
-    const fileHash = await getSHA_1FromFile(fileInput.files[0]);
-
+fileInput.addEventListener("change", async function (evt) {
     //разделение имени файла на несколько подстрок для получения расширения файла
-    var splitFileName = fileInput.files[0].name.split('.');
+    const splitFileName = fileInput.files[0].name.split('.');
     //добавить вывод ошибки если файл не имеет расширения
     if (splitFileName.length < 2) {
         return;
     }
+    file_format.value = splitFileName[splitFileName.length - 1];
+    //получение хеша файла
+    await getSHA_1FromFile(fileInput.files[0]);
+});
+
+document.getElementById('ecg_upload_form').addEventListener("submit", async function (evt) {
+    //запрет стандартного действия после нажатия sumbit
+    evt.preventDefault();
 
     //формирование post запроса
     var formData = new FormData();
     formData.append('ecg_id_field', ecg_id.value);
     formData.append('sample_frequency_field', sample_frequency.value);
     formData.append('amplitude_resolution_field', amplitude_resolution.value);
-    formData.append('file_format', splitFileName[splitFileName.length - 1]);
-    formData.append('file_hash', fileHash);
+    formData.append('file_format', file_format.value);
+    formData.append('file_hash', file_hash.value);
 
     axios({
         method: "post",
@@ -114,13 +118,6 @@ document.getElementById('ecg_upload_form').addEventListener("submit", async func
             }
             //список ошибок
             var error_response = response.response.data;
-            //список полей и предназначенных для них списков ошибок
-            let field_to_error_list = new Map();
-            field_to_error_list.set('ecg_id_field', 'ecg_id_error_list');
-            field_to_error_list.set('sample_frequency_field', 'sample_frequency_error_list');
-            field_to_error_list.set('amplitude_resolution_field', 'amplitude_resolution_error_list');
-            field_to_error_list.set('file_hash', 'ecg_file_error_list');
-            field_to_error_list.set('file_format', 'ecg_file_error_list');
             //заполнение ошибок
             for (let [field_name, list_name] of field_to_error_list) {
                 if (error_response[field_name] != undefined) {
