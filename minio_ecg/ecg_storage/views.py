@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from .models import ecg
 from .models import ecg_files
 
+from .forms import FileUpload
+
 from datetime import timedelta
 
 # Create your views here.
@@ -28,11 +30,21 @@ def add(request):
 
 @login_required
 def add_ecg_file(request):
-    return render(
-        request,
-        'upload_file.html',
-        context={},
-    )
+    if request.method == 'POST':
+        dict_response = {}
+        form = FileUpload(request.POST)
+        if form.is_valid():
+            dict_response['data'] = form.cleaned_data
+            return JsonResponse(dict_response, safe=False)
+        else:
+            data = form.errors
+            return JsonResponse(data, status=400, safe=False)
+    else:
+        return render(
+            request,
+            'upload_file.html',
+            context={},
+        )
 
 
 def common_list(request):

@@ -2,25 +2,34 @@
 
 {% block content %}
 <h1>Добавление новых файлов</h1>
-<form>
+<form id="ecg_upload_form">
     {% csrf_token %}
     <div class="form-group">
         <label for="ecg_id_field">ID экг для которого загружается файл</label>
         <input type="text" id="ecg_id_field" class="form-control" required>
+        <ul id="ecg_id_error_list" class="errorlist">
+        </ul>
     </div>
     <div class="form-group">
         <label for="sample_frequency_field">Sample frequency</label>
         <input type="text" id="sample_frequency_field" class="form-control" required>
+        <ul id="sample_frequency_error_list" class="errorlist">
+        </ul>
     </div>
     <div class="form-group">
         <label for="amplitude_resolution_field">Amplitude resolution</label>
         <input type="text" id="amplitude_resolution_field" class="form-control" required>
+        <ul id="amplitude_resolution_error_list" class="errorlist">
+        </ul>
     </div>
     <div class="form-group">
         <label for="ecg_file_select">Выбор файла</label>
         <input type="file" id="ecg_file_select" class="form-control-file mb-2" required>
+        <ul id="ecg_file_error_list" class="errorlist">
+        </ul>
     </div>
-    <button id="check_and_upload" class="btn btn-primary">Загрузить</button>
+    <button type="submit" id="check_and_upload" class="btn btn-primary">Загрузить</button>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js" integrity="sha256-JLmknTdUZeZZ267LP9qB+/DT7tvxOOKctSKeUC2KT6E=" crossorigin="anonymous"></script>
     {% load static %}
     <script src="{% static 'js/file_upload.js' %}"></script>
 </form>

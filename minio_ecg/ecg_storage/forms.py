@@ -11,7 +11,7 @@ class FileUpload(forms.Form):
     ecg_id_field = forms.IntegerField(label='ID экг для которого загружается файл')
     sample_frequency_field = forms.IntegerField(label='Sample frequency')
     amplitude_resolution_field = forms.IntegerField(label='Amplitude resolution')
-    file_hash = forms.CharField(validators=ecg_files.file_hash.validators)
+    file_hash = forms.CharField(validators=[validators.MaxLengthValidator(40), validators.MinLengthValidator(40)])
     file_format = forms.CharField(validators=[validators.MaxLengthValidator(20), validators.MinLengthValidator(1)])
 
     def clean_ecg_id_field(self):
