@@ -1,9 +1,10 @@
-from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import User
 from django.core import validators
-from minio import Minio
 from django.conf import settings
+
+from minio import Minio
+from datetime import timedelta
 
 # Create your models here.
 
