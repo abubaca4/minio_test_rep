@@ -91,7 +91,19 @@ document.getElementById('ecg_upload_form').addEventListener("submit", async func
     })
         .then(function (response) {
             //handle success
-            console.log(response);
+            //console.log(response);
+            const input_data = response.data;
+            axios({
+                method: "put",
+                url: input_data['upload_url'],
+                data: fileInput.files[0],
+            })
+                .then(function (response) {
+                    document.location.href = input_data['redirect_url'];
+                })
+                .catch(function (response) {
+                    console.log(response.response);
+                })
         })
         .catch(function (response) {
             //handle error
