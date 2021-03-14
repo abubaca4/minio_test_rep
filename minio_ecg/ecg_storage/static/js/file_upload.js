@@ -14,17 +14,6 @@ field_to_error_list.set('amplitude_resolution_field', 'amplitude_resolution_erro
 field_to_error_list.set('file_hash', 'ecg_file_error_list');
 field_to_error_list.set('file_format', 'ecg_file_error_list');
 
-//если crypto.subtle по той или иной причине не поддерживается подключить CryptoJS
-if (crypto.subtle == undefined) {
-    var CryptoJS_script = document.createElement('script');
-    CryptoJS_script.type = 'text/javascript';
-    //необходимо подключить только необходимые модули долгая загрузка https://cdnjs.com/libraries/crypto-js
-    CryptoJS_script.src = "https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js";
-    //CryptoJS_script.integrity="sha512-nOQuvD9nKirvxDdvQ9OMqe2dgapbPB7vYAMrzJihw5m+aNcf0dX53m6YxM4LgA9u8e9eg9QX+/+mPu8kCNpV2A==";
-    //CryptoJS_script.crossorigin="anonymous";
-    document.head.appendChild(CryptoJS_script);
-}
-
 function arrayBufferToWordArray(ab) {
     var i8a = new Uint8Array(ab);
     var a = [];
@@ -34,42 +23,40 @@ function arrayBufferToWordArray(ab) {
     return CryptoJS.lib.WordArray.create(a, i8a.length);
 }
 
-function CryptoJS_Get_Sha1_FromFile(inputFile) {
-    var reader = new FileReader();
-    reader.onload = (function () {
-        return async function (e) {
-            const arrayBuffer = e.target.result;
-            const hash = CryptoJS.SHA1(arrayBufferToWordArray(arrayBuffer));
-            //преобразование ArrayBuffer к строке
-            file_hash.value = hash;
-        };
-    })();
-    //чтение файла
-    reader.readAsArrayBuffer(inputFile);
+function getSha1CryptoJS(inputArrayBuffer) {
+    //преобразование к формату CryptoJS
+    const inputWordArray = arrayBufferToWordArray(inputArrayBuffer);
+    //получение хеша
+    const hash = CryptoJS.SHA1(inputWordArray);
+    return hash;
 }
 
-async function getFileHash_crypto(inputFile, hashAlgorithm) {
+async function getHash_crypto(inputArrayBuffer, hashAlgorithm) {
+    //вычисление хеша встроенной функцией браузера
+    const result = await crypto.subtle.digest(hashAlgorithm, inputArrayBuffer);
+    //преобразование к строке
+    const stringHash = Array.prototype.map.call(new Uint8Array(result), x => (('00' + x.toString(16)).slice(-2))).join('');
+    return stringHash;
+}
+
+async function getSha1FromFile(inputFile) {
     var reader = new FileReader();
     //назначение действия после полного чтения файла
     reader.onload = (function () {
         return async function (e) {
-            //создание хеша средствами браузера может не поддерживаться в старых браузерах(или если соединение не https)
-            let result = await crypto.subtle.digest(hashAlgorithm, e.target.result);
-            //преобразование ArrayBuffer к строке
-            file_hash.value = Array.prototype.map.call(new Uint8Array(result), x => (('00' + x.toString(16)).slice(-2))).join('');
+            //использовать CryptoJS если crypto.subtle не поддерживается
+            if (crypto.subtle == undefined) {
+                //создание хеша средствами сторонней библиотеки
+                file_hash.value = getSha1CryptoJS(e.target.result);
+            }
+            else {
+                //создание хеша средствами браузера может не поддерживаться в старых браузерах(или если соединение не https)
+                file_hash.value = await getHash_crypto(e.target.result, 'SHA-1');
+            }
         };
     })();
     //чтение файла
     reader.readAsArrayBuffer(inputFile);
-}
-
-async function getSHA_1FromFile(inputFile) {
-    //использовать CryptoJS если crypto.subtle не поддерживается
-    if (crypto.subtle == undefined) {
-        await CryptoJS_Get_Sha1_FromFile(inputFile);
-    } else {
-        await getFileHash_crypto(inputFile, 'SHA-1');
-    }
 }
 
 fileInput.addEventListener("change", async function (evt) {
@@ -81,7 +68,7 @@ fileInput.addEventListener("change", async function (evt) {
     }
     file_format.value = splitFileName[splitFileName.length - 1];
     //получение хеша файла
-    await getSHA_1FromFile(fileInput.files[0]);
+    await getSha1FromFile(fileInput.files[0]);
 });
 
 document.getElementById('ecg_upload_form').addEventListener("submit", async function (evt) {
