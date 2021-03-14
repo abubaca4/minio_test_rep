@@ -1,7 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.core import validators
-from django.shortcuts import get_object_or_404
 
 from django import forms
 
@@ -37,7 +36,7 @@ class FileUpload(forms.Form):
         return data
 
     def make_obj_from_form(self):
-        ecg_inst = get_object_or_404(ecg, id=self.cleaned_data['ecg_id_field'])
+        ecg_inst = ecg.objects.filter(id=self.cleaned_data['ecg_id_field'])[0]
         return ecg_files(ecg_id=ecg_inst,
                          format=self.cleaned_data['file_format'],
                          file_hash=self.cleaned_data['file_hash'],
