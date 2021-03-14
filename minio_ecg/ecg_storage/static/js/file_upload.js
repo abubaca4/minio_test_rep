@@ -1,19 +1,18 @@
-var ecg_id = document.getElementById('id_ecg_id_field');
-var sample_frequency = document.getElementById('id_sample_frequency_field');
-var amplitude_resolution = document.getElementById('id_amplitude_resolution_field');
-var fileInput = document.getElementById('id_ecg_file_select');
-var file_hash = document.getElementById('id_file_hash');
-var file_format = document.getElementById('id_file_format');
-const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+var ecg_id = document.getElementById('id_ecg_id_field'); //переменная поля экг id
+var sample_frequency = document.getElementById('id_sample_frequency_field'); //переменная поля Sample frequency
+var amplitude_resolution = document.getElementById('id_amplitude_resolution_field'); //переменная Amplitude resolution
+var fileInput = document.getElementById('id_ecg_file_select'); //поле выбора файла
+var file_hash = document.getElementById('id_file_hash'); //скрытое поле для хеша файла
+var file_format = document.getElementById('id_file_format'); //скрытое поле для расширения файла
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value; //токен для отправки данных на сервер
 
-//список полей и предназначенных для них списков ошибок
-let field_to_error_list = new Map();
+let field_to_error_list = new Map(); //список полей и предназначенных для них списков ошибок
 field_to_error_list.set('ecg_id_field', 'ecg_id_error_list');
 field_to_error_list.set('sample_frequency_field', 'sample_frequency_error_list');
 field_to_error_list.set('amplitude_resolution_field', 'amplitude_resolution_error_list');
 field_to_error_list.set('file_hash', 'ecg_file_error_list');
 field_to_error_list.set('file_format', 'ecg_file_error_list');
-
+//функция преобразования arrayBuffer к формату CryptoJS WordArray
 function arrayBufferToWordArray(ab) {
     var i8a = new Uint8Array(ab);
     var a = [];
@@ -22,7 +21,7 @@ function arrayBufferToWordArray(ab) {
     }
     return CryptoJS.lib.WordArray.create(a, i8a.length);
 }
-
+//получение хеша из ArrayBuffer с помощью CryptoJS
 function getSha1CryptoJS(inputArrayBuffer) {
     //преобразование к формату CryptoJS
     const inputWordArray = arrayBufferToWordArray(inputArrayBuffer);
@@ -30,7 +29,7 @@ function getSha1CryptoJS(inputArrayBuffer) {
     const hash = CryptoJS.SHA1(inputWordArray);
     return hash;
 }
-
+//получение хеша из ArrayBuffer средствами браузера
 async function getHash_crypto(inputArrayBuffer, hashAlgorithm) {
     //вычисление хеша встроенной функцией браузера
     const result = await crypto.subtle.digest(hashAlgorithm, inputArrayBuffer);
@@ -38,7 +37,7 @@ async function getHash_crypto(inputArrayBuffer, hashAlgorithm) {
     const stringHash = Array.prototype.map.call(new Uint8Array(result), x => (('00' + x.toString(16)).slice(-2))).join('');
     return stringHash;
 }
-
+//получение хеша указанного файла
 async function getSha1FromFile(inputFile) {
     var reader = new FileReader();
     //назначение действия после полного чтения файла
@@ -58,7 +57,7 @@ async function getSha1FromFile(inputFile) {
     //чтение файла
     reader.readAsArrayBuffer(inputFile);
 }
-
+//при каждом выборе другого файла
 fileInput.addEventListener("change", async function (evt) {
     //разделение имени файла на несколько подстрок для получения расширения файла
     const splitFileName = fileInput.files[0].name.split('.');
@@ -70,7 +69,7 @@ fileInput.addEventListener("change", async function (evt) {
     //получение хеша файла
     await getSha1FromFile(fileInput.files[0]);
 });
-
+//событие при нажатии кнопки отправки формы
 document.getElementById('ecg_upload_form').addEventListener("submit", async function (evt) {
     //запрет стандартного действия после нажатия sumbit
     evt.preventDefault();
@@ -83,6 +82,7 @@ document.getElementById('ecg_upload_form').addEventListener("submit", async func
     formData.append('file_format', file_format.value);
     formData.append('file_hash', file_hash.value);
 
+    //отправка данных на сервер
     axios({
         method: "post",
         url: document.URL,
@@ -90,18 +90,21 @@ document.getElementById('ecg_upload_form').addEventListener("submit", async func
         headers: { "Content-Type": "multipart/form-data", "X-CSRFToken": csrftoken },
     })
         .then(function (response) {
-            //handle success
+            //Если сервер вернул что в данных нет ошибки
             //console.log(response);
-            const input_data = response.data;
+            const input_data = response.data; //json с данными
+            //отправка файла в minio
             axios({
                 method: "put",
                 url: input_data['upload_url'],
                 data: fileInput.files[0],
             })
                 .then(function (response) {
+                    //перенаправить на указанный адрес при успешной загрузке
                     document.location.href = input_data['redirect_url'];
                 })
                 .catch(function (response) {
+                    //предполагается сделать запрос на удаление записи о файле на сервере если он не был загружен в minio(для этого передаётся ecg_file_id в json)
                     console.log(response.response);
                 })
         })
