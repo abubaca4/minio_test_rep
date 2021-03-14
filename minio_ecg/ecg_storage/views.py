@@ -35,6 +35,7 @@ def add_ecg_file(request: HttpRequest):
         if form.is_valid():
             dict_response = {}
             new_ecg_file = form.make_obj_from_form()
+            new_ecg_file.save()
             dict_response['upload_url'] = new_ecg_file.get_minio_upload_link(
                 link_live_duration=timedelta(minutes=5))
             dict_response['ecg_file_id'] = new_ecg_file.id
