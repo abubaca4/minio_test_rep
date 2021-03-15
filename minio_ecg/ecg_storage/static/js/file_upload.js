@@ -12,6 +12,17 @@ field_to_error_list.set('sample_frequency_field', 'sample_frequency_error_list')
 field_to_error_list.set('amplitude_resolution_field', 'amplitude_resolution_error_list');
 field_to_error_list.set('file_hash', 'ecg_file_error_list');
 field_to_error_list.set('file_format', 'ecg_file_error_list');
+
+//очистка списка ошибок
+function error_list_clean() {
+    const lists = document.querySelectorAll('.errorlist');
+    for (const list of lists) {
+        while (list.firstChild) {
+            list.removeChild(list.firstChild);
+        }
+    }
+}
+
 //функция преобразования arrayBuffer к формату CryptoJS WordArray
 function arrayBufferToWordArray(ab) {
     var i8a = new Uint8Array(ab);
@@ -61,18 +72,40 @@ async function getSha1FromFile(inputFile) {
 fileInput.addEventListener("change", async function (evt) {
     //разделение имени файла на несколько подстрок для получения расширения файла
     const splitFileName = fileInput.files[0].name.split('.');
-    //добавить вывод ошибки если файл не имеет расширения
+    //пустое значение если файл не имеет расширения(для дальнейшей проверки)
     if (splitFileName.length < 2) {
+        file_format.value = '';
         return;
     }
-    file_format.value = splitFileName[splitFileName.length - 1];
+    else {
+        file_format.value = splitFileName[splitFileName.length - 1];
+    }
     //получение хеша файла
     await getSha1FromFile(fileInput.files[0]);
 });
+
 //событие при нажатии кнопки отправки формы
 document.getElementById('ecg_upload_form').addEventListener("submit", async function (evt) {
     //запрет стандартного действия после нажатия sumbit
     evt.preventDefault();
+    //удаление текущих ошибок
+    error_list_clean();
+
+    if (file_format.value.length < 1) {
+        let error_list = document.getElementById(field_to_error_list.get('file_format'));
+        let li_ = document.createElement('li');
+        li_.innerHTML = "Ошибка получения расширения файла(возможно файл не имеет расширения)";
+        error_list.appendChild(li_);
+        return;
+    }
+
+    if (file_hash.value.length != 40) {
+        let error_list = document.getElementById(field_to_error_list.get('file_hash'));
+        let li_ = document.createElement('li');
+        li_.innerHTML = "Ошибка рассчёта хеша файла";
+        error_list.appendChild(li_);
+        return;
+    }
 
     //формирование post запроса
     var formData = new FormData();
@@ -111,13 +144,6 @@ document.getElementById('ecg_upload_form').addEventListener("submit", async func
         .catch(function (response) {
             //handle error
             //console.log(response.response);
-            //удаление текущих ошибок
-            const lists = document.querySelectorAll('.errorlist');
-            for (const list of lists) {
-                while (list.firstChild) {
-                    list.removeChild(list.firstChild);
-                }
-            }
             //список ошибок
             var error_response = response.response.data;
             //заполнение ошибок
