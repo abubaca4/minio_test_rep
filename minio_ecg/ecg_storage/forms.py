@@ -6,6 +6,7 @@ from django import forms
 
 from .models import ecg
 from .models import ecg_files
+from .models import patients
 
 
 class FileUpload(forms.Form):
@@ -14,10 +15,10 @@ class FileUpload(forms.Form):
     sample_frequency_field = forms.IntegerField(label='Sample frequency')
     amplitude_resolution_field = forms.IntegerField(
         label='Amplitude resolution')
-    file_hash = forms.CharField(validators=[validators.MaxLengthValidator(
-        40), validators.MinLengthValidator(40)])
+    file_hash = forms.CharField(
+        min_length=40, max_length=40)
     file_format = forms.CharField(
-        validators=[validators.MaxLengthValidator(20), validators.MinLengthValidator(1)])
+        min_length=1, max_length=40)
 
     def clean_ecg_id_field(self):
         data = self.cleaned_data['ecg_id_field']
@@ -42,3 +43,9 @@ class FileUpload(forms.Form):
                          file_hash=self.cleaned_data['file_hash'],
                          sample_frequency=self.cleaned_data['sample_frequency_field'],
                          amplitude_resolution=self.cleaned_data['amplitude_resolution_field'])
+
+
+class Patient(forms.ModelForm):
+    class Meta:
+        model = patients
+        fields = ['sex', 'birthdate', 'name', 'last_name', 'middle_name']

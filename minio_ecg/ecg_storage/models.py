@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core import validators
 from django.conf import settings
+from django.urls import reverse
 
 from minio import Minio
 from datetime import timedelta
@@ -101,7 +102,7 @@ class ecg_files(models.Model):
     format = models.CharField(
         max_length=20, help_text="Тип файла")
     file_hash = models.CharField(
-        max_length=40, unique=True, help_text="sha-1 хеш файла", validators=[validators.MaxLengthValidator(40), validators.MinLengthValidator(40)])
+        max_length=40, unique=True, help_text="sha-1 хеш файла")
     sample_frequency = models.IntegerField()
     amplitude_resolution = models.IntegerField()
 
@@ -153,6 +154,9 @@ class ecg_files(models.Model):
                 expires=link_live_duration,
             )
         return url
+
+    def get_view_url(self):
+        return reverse('file_view', args=[self.id])
 
 
 class original_information(models.Model):

@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpRequest
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
 
 from .models import ecg
 from .models import ecg_files
@@ -39,7 +41,7 @@ def add_ecg_file(request: HttpRequest):
             dict_response['upload_url'] = new_ecg_file.get_minio_upload_link(
                 link_live_duration=timedelta(minutes=5))
             dict_response['ecg_file_id'] = new_ecg_file.id
-            dict_response['redirect_url'] = ''
+            dict_response['redirect_url'] = new_ecg_file.get_view_url()
             return JsonResponse(dict_response)
         else:
             data = form.errors
@@ -71,3 +73,18 @@ def ecg_list(request: HttpRequest):
         'ecg_list.html',
         context={'ecg_list': ecg.objects.all()},
     )
+
+
+def view_file(request: HttpRequest, id: int):
+    file_obj = get_object_or_404(ecg_files, id=id)
+    return render(
+        request,
+        'file_view.html',
+        context={'o_file': file_obj},
+    )
+
+
+def file_download_link(request: HttpRequest, id: int):
+    file_obj = get_object_or_404(ecg_files, id=id)
+    # добавить проверку на доступ к файлу
+    return redirect(file_obj.get_minio_download_link(link_live_duration=timedelta(minutes=5)))
