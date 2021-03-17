@@ -1,6 +1,6 @@
 {% extends "base_generic.html" %}
-
+{% block title %}<title>{{page_title}}</title>{% endblock %}
 {% block content %}
-<h1>Добавление новых записей</h1>
+<h1>{{page_title}}</h1>
 <p><a href="{% url 'add_ecg_file_page' %}">Загрузка файла экг</a></p>
 {% endblock %}

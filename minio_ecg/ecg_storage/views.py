@@ -19,7 +19,7 @@ def index(request: HttpRequest):
     return render(
         request,
         'index.html',
-        context={},
+        context={'page_title': 'Хранилище экг'},
     )
 
 
@@ -27,7 +27,7 @@ def common_list(request: HttpRequest):
     return render(
         request,
         'list_of_lists.html',
-        context={},
+        context={'page_title': 'Списки записей'},
     )
 
 
@@ -35,7 +35,7 @@ def add(request: HttpRequest):
     return render(
         request,
         'add_list.html',
-        context={},
+        context={'page_title': 'Добавление новых записей'},
     )
 
 
@@ -43,7 +43,8 @@ def ecg_list(request: HttpRequest):
     return render(
         request,
         'ecg_list.html',
-        context={'ecg_list': ecg.objects.all()},
+        context={'ecg_list': ecg.objects.all(
+        ), 'page_title': 'Список доступных экг'},
     )
 
 
@@ -52,7 +53,7 @@ def view_file(request: HttpRequest, id: int):
     return render(
         request,
         'file_view.html',
-        context={'o_file': file_obj},
+        context={'o_file': file_obj, 'page_title': 'Информация о файле'},
     )
 
 
@@ -100,4 +101,6 @@ def add_patient(request: HttpRequest):
     else:
         form = PatientForm()
 
-    return render(request, 'add_patient.html', context={'form': form},)
+    return render(request,
+                  'add_patient.html',
+                  context={'form': form, 'page_title': 'Добавление пациента'},)

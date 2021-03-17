@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
-
+{% block title %}<title>{{page_title}}</title>{% endblock %}
 {% block content %}
-<h1>Информация о файле</h1>
+<h1>{{page_title}}</h1>
 <p><a href="{% url 'file_download' o_file.id %}">{{o_file.file_name}}</a></p>
 <p>Sample frequency: {{o_file.sample_frequency}}</p>
 <p>Amplitude resolution: {{o_file.amplitude_resolution}}</p>
