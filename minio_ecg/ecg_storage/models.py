@@ -42,6 +42,15 @@ class patients(models.Model):
     class Meta:
         ordering = ["-birthdate"]
 
+    def get_absolute_url(self):
+        return reverse('patient_view', args=[self.id])
+
+    def get_sex(self):
+        for choice in self.sex_list:
+            if choice[0] == self.sex:
+                return choice[1]
+        return ''
+
 
 class cardiac_pathology(models.Model):
     name = models.CharField(max_length=100, unique=True,

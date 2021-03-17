@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 
 from .models import ecg
 from .models import ecg_files
+from .models import patients
 
 from .forms import FileUploadForm
 from .forms import PatientForm
@@ -57,6 +58,16 @@ def view_file(request: HttpRequest, id: int):
     )
 
 
+def view_patient(request: HttpRequest, id: int):
+    patient = get_object_or_404(patients, id=id)
+    form = PatientForm(instance=patient)
+    return render(
+        request,
+        'patient_view.html',
+        context={'form': form, 'page_title': 'Информация о пациенте'},
+    )
+
+
 @login_required
 def add_ecg_file(request: HttpRequest):
     if request.method == 'POST':
@@ -96,8 +107,8 @@ def add_patient(request: HttpRequest):
     if request.method == 'POST':
         form = PatientForm(request.POST)
         if form.is_valid():
-            form.save()
-            return
+            result = form.save()
+            return redirect(result.get_absolute_url())
     else:
         form = PatientForm()
 

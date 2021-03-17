@@ -1,0 +1,10 @@
+{% extends "base_generic.html" %}
+{% block title %}<title>{{page_title}}</title>{% endblock %}
+{% block content %}
+<h1>{{page_title}}</h1>
+<p>{{ form.sex.help_text }}: {{ form.instance.get_sex }}</p>
+<p>{{ form.birthdate.help_text}}: {{ form.birthdate.value }}</p>
+<p>{{ form.name.help_text }}: {{ form.name.value }}</p>
+<p>{{ form.last_name.help_text }}: {{ form.last_name.value }}</p>
+<p>{{ form.middle_name.help_text}}: {{form.middle_name.value }}</p>
+{% endblock %}

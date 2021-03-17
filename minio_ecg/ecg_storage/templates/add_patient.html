@@ -2,4 +2,16 @@
 {% block title %}<title>{{page_title}}</title>{% endblock %}
 {% block content %}
 <h1>{{page_title}}</h1>
+<form action="" method="post">
+    {% csrf_token %}
+    {% load widget_tweaks %}
+    {% for field in form %}
+    <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.help_text }}</label>
+        {% render_field field class+="form-control" %}
+        {{ field.errors }}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Добавить</button>
+</form>
 {% endblock %}
