@@ -155,7 +155,7 @@ class ecg_files(models.Model):
             )
         return url
 
-    def get_view_url(self):
+    def get_absolute_url(self):
         return reverse('file_view', args=[self.id])
 
 

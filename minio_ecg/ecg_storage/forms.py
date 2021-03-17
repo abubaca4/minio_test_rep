@@ -9,7 +9,7 @@ from .models import ecg_files
 from .models import patients
 
 
-class FileUpload(forms.Form):
+class FileUploadForm(forms.Form):
     ecg_id_field = forms.IntegerField(
         label='ID экг для которого загружается файл')
     sample_frequency_field = forms.IntegerField(label='Sample frequency')
@@ -45,7 +45,7 @@ class FileUpload(forms.Form):
                          amplitude_resolution=self.cleaned_data['amplitude_resolution_field'])
 
 
-class Patient(forms.ModelForm):
+class PatientForm(forms.ModelForm):
     class Meta:
         model = patients
         fields = ['sex', 'birthdate', 'name', 'last_name', 'middle_name']
