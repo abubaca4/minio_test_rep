@@ -43,11 +43,12 @@ def add_list(request: HttpRequest):
 
 
 def ecg_list(request: HttpRequest):
+    form = EcgForm()
     return render(
         request,
         'ecg_list.html',
         context={'ecg_list': ecg.objects.all(
-        ), 'page_title': 'Список доступных экг'},
+        ), 'page_title': 'Список доступных экг', 'form': form},
     )
 
 

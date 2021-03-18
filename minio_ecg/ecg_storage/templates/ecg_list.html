@@ -6,11 +6,13 @@
     <tr>
         <td>ID</td>
         <td>Дата внесения в систему</td>
+        <td>{{ form.check_date.help_text }}</td>
     </tr>
     {% for copies in ecg_list %}
     <tr>
-        <td>{{copies.id}}</td>
+        <td><a href="{{copies.get_absolute_url}}">{{copies.id}}</a></td>
         <td>{{copies.add_date}}</td>
+        <td>{{copies.check_date}}</td>
     </tr>
     {% endfor %}
 </table>
