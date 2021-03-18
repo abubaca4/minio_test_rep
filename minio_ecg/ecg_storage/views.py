@@ -32,7 +32,7 @@ def common_list(request: HttpRequest):
     )
 
 
-def add(request: HttpRequest):
+def add_list(request: HttpRequest):
     return render(
         request,
         'add_list.html',
@@ -66,6 +66,21 @@ def view_patient(request: HttpRequest, id: int):
         'patient_view.html',
         context={'form': form, 'page_title': 'Информация о пациенте'},
     )
+
+
+def edit_patient(request: HttpRequest, id: int):
+    patient = get_object_or_404(patients, id=id)
+    if request.method == 'POST':
+        form = PatientForm(request.POST, instance=patient)
+        if form.is_valid():
+            form.save()
+            return redirect(patient.get_absolute_url())
+    else:
+        form = PatientForm(instance=patient)
+
+    return render(request,
+                  'add_patient.html',
+                  context={'form': form, 'page_title': 'Редактирование пациента'},)
 
 
 @login_required

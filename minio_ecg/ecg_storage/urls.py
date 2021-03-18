@@ -6,7 +6,7 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='ecg_index'),
-    path('add/', views.add, name='list_of_avaliable_models_addition'),
+    path('add/', views.add_list, name='list_of_avaliable_models_addition'),
     re_path(r'^add/file/$', views.add_ecg_file, name='add_ecg_file_page'),
     path('add/patient/', views.add_patient, name='add_patient_page'),
     path('list/', views.common_list, name='list_models_records'),
@@ -15,4 +15,5 @@ urlpatterns = [
     path('view/file/<int:id>/download/',
          views.file_download_link, name='file_download'),
     path('view/patient/<int:id>/', views.view_patient, name='patient_view'),
+    path('edit/patient/<int:id>/', views.edit_patient, name='patient_edit'),
 ]

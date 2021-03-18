@@ -7,4 +7,5 @@
 <p>{{ form.name.help_text }}: {{ form.name.value }}</p>
 <p>{{ form.last_name.help_text }}: {{ form.last_name.value }}</p>
 <p>{{ form.middle_name.help_text}}: {{form.middle_name.value }}</p>
+<p><a href="{% url 'patient_edit' form.instance.id %}">Редактировать</a></p>
 {% endblock %}
