@@ -2,6 +2,7 @@
 {% block title %}<title>{{page_title}}</title>{% endblock %}
 {% block content %}
 <h1>{{page_title}}</h1>
+<p><a href="{% url 'add_ecg_page' %}">Добавление ЭКГ</a></p>
 <p><a href="{% url 'add_ecg_file_page' %}">Загрузка файла экг</a></p>
 <p><a href="{% url 'add_patient_page' %}">Добавление пациента</a></p>
 {% endblock %}

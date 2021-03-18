@@ -7,11 +7,14 @@ from django.shortcuts import redirect
 from .models import ecg
 from .models import ecg_files
 from .models import patients
+from .models import access_groups
 
 from .forms import FileUploadForm
 from .forms import PatientForm
+from .forms import EcgForm
 
 from datetime import timedelta
+from datetime import datetime
 
 # Create your views here.
 
@@ -58,6 +61,12 @@ def view_file(request: HttpRequest, id: int):
     )
 
 
+def file_download_link(request: HttpRequest, id: int):
+    file_obj = get_object_or_404(ecg_files, id=id)
+    # добавить проверку на доступ к файлу
+    return redirect(file_obj.get_minio_download_link(link_live_duration=timedelta(minutes=5)))
+
+
 def view_patient(request: HttpRequest, id: int):
     patient = get_object_or_404(patients, id=id)
     form = PatientForm(instance=patient)
@@ -79,7 +88,7 @@ def edit_patient(request: HttpRequest, id: int):
         form = PatientForm(instance=patient)
 
     return render(request,
-                  'add_patient.html',
+                  'common_form.html',
                   context={'form': form, 'page_title': 'Редактирование пациента'},)
 
 
@@ -95,7 +104,6 @@ def edit_file(request: HttpRequest, id: int):
             file_obj.amplitude_resolution = form.cleaned_data['amplitude_resolution_field']
             file_obj.save()
             return redirect(file_obj.get_absolute_url())
-
     else:
         form = FileUploadForm(initial={'ecg_id_field': file_obj.ecg_id.id, 'sample_frequency_field': file_obj.sample_frequency,
                                        'amplitude_resolution_field': file_obj.amplitude_resolution, 'file_hash': file_obj.file_hash, 'file_format': file_obj.format})
@@ -137,12 +145,7 @@ def add_ecg_file(request: HttpRequest):
         )
 
 
-def file_download_link(request: HttpRequest, id: int):
-    file_obj = get_object_or_404(ecg_files, id=id)
-    # добавить проверку на доступ к файлу
-    return redirect(file_obj.get_minio_download_link(link_live_duration=timedelta(minutes=5)))
-
-
+@login_required
 def add_patient(request: HttpRequest):
     if request.method == 'POST':
         form = PatientForm(request.POST)
@@ -153,5 +156,22 @@ def add_patient(request: HttpRequest):
         form = PatientForm()
 
     return render(request,
-                  'add_patient.html',
+                  'common_form.html',
                   context={'form': form, 'page_title': 'Добавление пациента'},)
+
+
+@login_required
+def add_ecg(request: HttpRequest):
+    if request.method == 'POST':
+        form = EcgForm(request.POST)
+        if form.is_valid():
+            result = form.save()
+            return
+    else:
+        group = access_groups.objects.filter(name='Default')[0]
+        form = EcgForm(
+            initial={'source_user': request.user, 'access_id': group})
+
+    return render(request,
+                  'common_form.html',
+                  context={'form': form, 'page_title': 'Добавление ЭКГ'},)

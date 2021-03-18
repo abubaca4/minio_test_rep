@@ -49,3 +49,10 @@ class PatientForm(forms.ModelForm):
     class Meta:
         model = patients
         fields = ['sex', 'birthdate', 'name', 'last_name', 'middle_name']
+
+
+class EcgForm(forms.ModelForm):
+    class Meta:
+        model = ecg
+        fields = ['check_date', 'patient_age',
+                  'patient_id', 'source_user', 'access_id', 'org_id']
