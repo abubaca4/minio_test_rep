@@ -88,7 +88,7 @@ class ecg(models.Model):
         help_text="Дата снятия показаний", null=True, blank=True)
     add_date = models.DateTimeField(
         help_text="Дата внесения в систему", auto_now_add=True)
-    patient_age = models.IntegerField(help_text="Возраст пациэнта на момент снятия показаний(для показаний не имеющих даты рождения пациента)",
+    patient_age = models.IntegerField(help_text="Возраст пациента на момент снятия показаний(для показаний не имеющих даты рождения пациента)",
                                       null=True, blank=True, validators=[validators.MinValueValidator(0), validators.MaxValueValidator(150)])
     patient_id = models.ForeignKey(
         patients, models.SET_NULL, blank=True, null=True, help_text="Пациент которому принадлежит экг")
@@ -104,6 +104,9 @@ class ecg(models.Model):
 
     def __str__(self):
         return str(self.add_date)
+
+    def get_absolute_url(self):
+        return reverse('ecg_view', args=[self.id])
 
 
 class ecg_files(models.Model):

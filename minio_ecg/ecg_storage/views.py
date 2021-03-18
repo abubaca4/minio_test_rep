@@ -14,7 +14,6 @@ from .forms import PatientForm
 from .forms import EcgForm
 
 from datetime import timedelta
-from datetime import datetime
 
 # Create your views here.
 
@@ -74,6 +73,16 @@ def view_patient(request: HttpRequest, id: int):
         request,
         'patient_view.html',
         context={'form': form, 'page_title': 'Информация о пациенте'},
+    )
+
+
+def view_ecg(request: HttpRequest, id: int):
+    ecg_inst = get_object_or_404(ecg, id=id)
+    form = EcgForm(instance=ecg_inst)
+    return render(
+        request,
+        'ecg_view.html',
+        context={'form': form, 'page_title': 'Информация о экг'},
     )
 
 
@@ -166,7 +175,7 @@ def add_ecg(request: HttpRequest):
         form = EcgForm(request.POST)
         if form.is_valid():
             result = form.save()
-            return
+            return redirect(result.get_absolute_url())
     else:
         group = access_groups.objects.filter(name='Default')[0]
         form = EcgForm(

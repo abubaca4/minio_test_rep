@@ -1,0 +1,12 @@
+{% extends "base_generic.html" %}
+{% block title %}<title>{{page_title}}</title>{% endblock %}
+{% block content %}
+<h1>{{page_title}}</h1>
+<p>Дата добавления: {{ form.instance.add_date }}</p>
+<p>{{ form.check_date.help_text }}: {{ form.check_date.value }}</p>
+<p>{{ form.patient_age.help_text }}: {{ form.patient_age.value }}</p>
+<p>{{ form.patient_id.help_text }}: {{ form.patient_id.value }}</p>
+<p>{{ form.source_user.help_text }}: {{ form.source_user.value }}</p>
+<p>{{ form.access_id.help_text }}: {{ form.access_id.value }}</p>
+<p>{{ form.org_id.help_text }}: {{ form.org_id.value }}</p>
+{% endblock %}

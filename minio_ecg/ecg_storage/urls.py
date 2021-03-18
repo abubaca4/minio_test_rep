@@ -15,6 +15,7 @@ urlpatterns = [
     path('view/file/<int:id>/', views.view_file, name='file_view'),
     path('view/file/<int:id>/download/',
          views.file_download_link, name='file_download'),
+    path('view/ecg/<int:id>/', views.view_ecg, name='ecg_view'),
     path('view/patient/<int:id>/', views.view_patient, name='patient_view'),
     path('edit/patient/<int:id>/', views.edit_patient, name='patient_edit'),
     path('edit/file/<int:id>/', views.edit_file, name='file_edit'),
