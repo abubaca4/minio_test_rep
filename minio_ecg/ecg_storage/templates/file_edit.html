@@ -1,0 +1,27 @@
+{% extends "base_generic.html" %}
+{% block title %}<title>{{page_title}}</title>{% endblock %}
+{% block content %}
+<h1>{{page_title}}</h1>
+<form action="" method="post">
+    {% csrf_token %}
+    {% load widget_tweaks %}
+    <div class="form-group">
+        {{ form.ecg_id_field.label_tag }}
+        {% render_field form.ecg_id_field class+="form-control" %}
+        {{ form.ecg_id_field.errors }}
+    </div>
+    <div class="form-group">
+        {{ form.sample_frequency_field.label_tag }}
+        {% render_field form.sample_frequency_field class+="form-control" %}
+        {{ form.sample_frequency_field.errors }}
+    </div>
+    <div class="form-group">
+        {{ form.amplitude_resolution_field.label_tag }}
+        {% render_field form.amplitude_resolution_field class+="form-control" %}
+        {{ form.amplitude_resolution_field.errors }}
+    </div>
+    {% render_field form.file_hash class+="form-control" type+="hidden" %}
+    {% render_field form.file_format class+="form-control" type+="hidden" %}
+    <button type="submit" id="check_and_upload" class="btn btn-primary">Отправить</button>
+</form>
+{% endblock %}

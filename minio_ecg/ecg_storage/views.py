@@ -83,6 +83,31 @@ def edit_patient(request: HttpRequest, id: int):
                   context={'form': form, 'page_title': 'Редактирование пациента'},)
 
 
+def edit_file(request: HttpRequest, id: int):
+    file_obj = get_object_or_404(ecg_files, id=id)
+    if request.method == 'POST':
+        form = FileUploadForm(request.POST)
+        if form.is_valid():
+            ecg_inst = ecg.objects.filter(
+                id=form.cleaned_data['ecg_id_field'])[0]
+            file_obj.ecg_id = ecg_inst
+            file_obj.sample_frequency = form.cleaned_data['sample_frequency_field']
+            file_obj.amplitude_resolution = form.cleaned_data['amplitude_resolution_field']
+            file_obj.save()
+            return redirect(file_obj.get_absolute_url())
+
+    else:
+        form = FileUploadForm(initial={'ecg_id_field': file_obj.ecg_id.id, 'sample_frequency_field': file_obj.sample_frequency,
+                                       'amplitude_resolution_field': file_obj.amplitude_resolution, 'file_hash': file_obj.file_hash, 'file_format': file_obj.format})
+
+    return render(
+        request,
+        'file_edit.html',
+        context={'form': form,
+                 'page_title': 'Редактирование записи ecg файла'},
+    )
+
+
 @login_required
 def add_ecg_file(request: HttpRequest):
     if request.method == 'POST':
