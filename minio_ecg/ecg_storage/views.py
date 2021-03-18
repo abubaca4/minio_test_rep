@@ -52,6 +52,16 @@ def ecg_list(request: HttpRequest):
     )
 
 
+def file_list(request: HttpRequest):
+    form = FileUploadForm()
+    return render(
+        request,
+        'list_pages/file_list.html',
+        context={'form': form, 'file_list': ecg_files.objects.all(
+        ), 'page_title': 'Список доступных экг файлов'},
+    )
+
+
 def view_file(request: HttpRequest, id: int):
     file_obj = get_object_or_404(ecg_files, id=id)
     return render(

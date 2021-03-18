@@ -18,6 +18,7 @@ urlpatterns += [
 
 urlpatterns += [
     path('list/ecg/', views.ecg_list, name='list_ecg_records'),
+    path('list/file/', views.file_list, name='list_files'),
 ]
 
 urlpatterns += [
