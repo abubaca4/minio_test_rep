@@ -51,6 +51,14 @@ class patients(models.Model):
                 return choice[1]
         return ''
 
+    def __str__(self):
+        if self.name is None and self.last_name is None:
+            if self.birthdate is not None:
+                return str(self.birthdate)
+        else:
+            return(str(self.name)+' '+str(self.last_name))
+        return str(self.id)
+
 
 class cardiac_pathology(models.Model):
     name = models.CharField(max_length=100, unique=True,
