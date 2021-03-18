@@ -21,7 +21,7 @@ from datetime import timedelta
 def index(request: HttpRequest):
     return render(
         request,
-        'index.html',
+        'common_pages/index.html',
         context={'page_title': 'Хранилище экг'},
     )
 
@@ -29,7 +29,7 @@ def index(request: HttpRequest):
 def common_list(request: HttpRequest):
     return render(
         request,
-        'list_of_lists.html',
+        'common_pages/list_of_lists.html',
         context={'page_title': 'Списки записей'},
     )
 
@@ -37,7 +37,7 @@ def common_list(request: HttpRequest):
 def add_list(request: HttpRequest):
     return render(
         request,
-        'add_list.html',
+        'common_pages/add_list.html',
         context={'page_title': 'Добавление новых записей'},
     )
 
@@ -46,7 +46,7 @@ def ecg_list(request: HttpRequest):
     form = EcgForm()
     return render(
         request,
-        'ecg_list.html',
+        'list_pages/ecg_list.html',
         context={'ecg_list': ecg.objects.all(
         ), 'page_title': 'Список доступных экг', 'form': form},
     )
@@ -56,7 +56,7 @@ def view_file(request: HttpRequest, id: int):
     file_obj = get_object_or_404(ecg_files, id=id)
     return render(
         request,
-        'file_view.html',
+        'view_pages/file_view.html',
         context={'o_file': file_obj, 'page_title': 'Информация о файле'},
     )
 
@@ -72,7 +72,7 @@ def view_patient(request: HttpRequest, id: int):
     form = PatientForm(instance=patient)
     return render(
         request,
-        'patient_view.html',
+        'view_pages/patient_view.html',
         context={'form': form, 'page_title': 'Информация о пациенте'},
     )
 
@@ -82,7 +82,7 @@ def view_ecg(request: HttpRequest, id: int):
     form = EcgForm(instance=ecg_inst)
     return render(
         request,
-        'ecg_view.html',
+        'view_pages/ecg_view.html',
         context={'form': form, 'page_title': 'Информация о экг'},
     )
 
@@ -98,7 +98,7 @@ def edit_patient(request: HttpRequest, id: int):
         form = PatientForm(instance=patient)
 
     return render(request,
-                  'common_form.html',
+                  'post_forms/common_form.html',
                   context={'form': form, 'page_title': 'Редактирование пациента'},)
 
 
@@ -120,7 +120,7 @@ def edit_file(request: HttpRequest, id: int):
 
     return render(
         request,
-        'file_edit.html',
+        'post_forms/file_edit.html',
         context={'form': form,
                  'page_title': 'Редактирование записи ecg файла'},
     )
@@ -150,7 +150,7 @@ def add_ecg_file(request: HttpRequest):
                                        'amplitude_resolution_field': amplitude_resolution})
         return render(
             request,
-            'upload_file.html',
+            'post_forms/upload_file.html',
             context={'form': form, 'page_title': 'Добаление ecg файла'},
         )
 
@@ -166,7 +166,7 @@ def add_patient(request: HttpRequest):
         form = PatientForm()
 
     return render(request,
-                  'common_form.html',
+                  'post_forms/common_form.html',
                   context={'form': form, 'page_title': 'Добавление пациента'},)
 
 
@@ -183,5 +183,5 @@ def add_ecg(request: HttpRequest):
             initial={'source_user': request.user, 'access_id': group})
 
     return render(request,
-                  'common_form.html',
+                  'post_forms/common_form.html',
                   context={'form': form, 'page_title': 'Добавление ЭКГ'},)
