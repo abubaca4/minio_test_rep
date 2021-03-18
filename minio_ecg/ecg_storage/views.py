@@ -126,6 +126,21 @@ def edit_file(request: HttpRequest, id: int):
     )
 
 
+def edit_ecg(request: HttpRequest, id: int):
+    ecg_inst = get_object_or_404(ecg, id=id)
+    if request.method == 'POST':
+        form = EcgForm(request.POST, instance=ecg_inst)
+        if form.is_valid():
+            form.save()
+            return redirect(ecg_inst.get_absolute_url())
+    else:
+        form = EcgForm(instance=ecg_inst)
+
+    return render(request,
+                  'post_forms/common_form.html',
+                  context={'form': form, 'page_title': 'Редактирование ЭКГ'},)
+
+
 @login_required
 def add_ecg_file(request: HttpRequest):
     if request.method == 'POST':

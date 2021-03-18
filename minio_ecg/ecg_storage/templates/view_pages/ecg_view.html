@@ -9,4 +9,5 @@
 <p>{{ form.source_user.help_text }}: {{ form.source_user.value }}</p>
 <p>{{ form.access_id.help_text }}: {{ form.access_id.value }}</p>
 <p>{{ form.org_id.help_text }}: {{ form.org_id.value }}</p>
+<p><a href="{% url 'ecg_edit' form.instance.id %}">Редактировать</a></p>
 {% endblock %}

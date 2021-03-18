@@ -31,4 +31,5 @@ urlpatterns += [
 urlpatterns += [
     path('edit/patient/<int:id>/', views.edit_patient, name='patient_edit'),
     path('edit/file/<int:id>/', views.edit_file, name='file_edit'),
+    path('edit/ecg/<int:id>/', views.edit_ecg, name='ecg_edit'),
 ]
