@@ -42,3 +42,9 @@ services:
    - django
   ports:
     - "8080:8080"
+
+volumes:
+    minio_ecg_data:
+        driver: local
+    minio_ecg_dbdata:
+        driver: local
