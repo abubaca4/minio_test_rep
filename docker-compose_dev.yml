@@ -2,6 +2,7 @@ version: '3.7'
 services:
  s3:
     image: minio/minio:latest
+    container_name: minio_ecg_s3
     ports:
     - "32768:9000"
     volumes:
