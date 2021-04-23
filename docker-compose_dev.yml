@@ -1,0 +1,48 @@
+version: '3.7'
+services:
+ s3:
+  image: minio/minio:latest
+  ports:
+    - "32768:9000"
+  volumes:
+    - minio_ecg_data:/data
+  environment:
+    MINIO_ACCESS_KEY: FAO5WMCSNYII9GNHMEVV6KX4
+    MINIO_SECRET_KEY: rU7dkiJh4XN3dEoXeI9E2wdnIIUdZS9JuyFhG3F7r2UicIVU
+  command: server /data
+ postgres:
+  restart: always
+  container_name: minio_ecg_postgres
+  build: 
+   context: .
+   dockerfile: dockerfiles/docker_postgres.conf
+  volumes:
+      - minio_ecg_dbdata:/var/lib/postgresql/data
+ django:
+  restart: always
+  container_name: minio_ecg_django
+  volumes:
+   - ./minio_ecg:/code
+  build: 
+   context: .
+   dockerfile: dockerfiles/dev/docker_django.conf
+  depends_on:
+   - postgres
+   - s3
+  environment:
+    - DJANGO_SUPERUSER_PASSWORD=7yNMAhbd95FE9mZT
+    - DJANGO_SUPERUSER_EMAIL=example@example.com
+    - DJANGO_SUPERUSER_USERNAME=admin
+  command: bash -c "python /code/manage.py collectstatic --noinput && python /code/manage.py migrate && python /code/manage.py runserver 0.0.0.0:8001"
+ nginx:
+  restart: always
+  container_name: minio_ecg_nginx
+  volumes:
+   - ./minio_ecg:/code
+  build:
+   context: .
+   dockerfile: dockerfiles/dev/docker_nginx.conf
+  depends_on:
+   - django
+  ports:
+    - "8080:8080"

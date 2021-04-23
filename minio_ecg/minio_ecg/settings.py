@@ -26,7 +26,7 @@ SECRET_KEY = ')864-bu4_isx5a-c+qu@)t37t0l_xj0zpvj#toq%3aeg8kc$1b'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '172.23.0.7']
+ALLOWED_HOSTS = ['localhost', '172.23.0.7', '83.149.198.179']
 
 
 # Application definition
@@ -80,9 +80,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'minio_ecg',
-        'USER': 'admin',
+        'USER': 'ecg_admin',
         'PASSWORD': '?zfQn[{wp;<%3MKq',
-        'HOST': '127.0.0.1',
+        'HOST': 'postgres',
         'PORT': '32769',
     }
 }
@@ -126,9 +126,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = 'static'
+
 LOGIN_REDIRECT_URL = '/'
 
-MINIO_URL = "172.23.0.7:32768"
+MINIO_URL = "83.149.198.179:32768"
 
 MINIO_ACCESS_KEY = "FAO5WMCSNYII9GNHMEVV6KX4"
 
