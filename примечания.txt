@@ -1,3 +1,3 @@
-создание базы данных postgresql
-psql -U admin 
-CREATE DATABASE minio_ecg;
+
+CREAсоздание базы данных postgresql
+psql -U admin TE DATABASE minio_ecg;
