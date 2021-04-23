@@ -1,6 +1,7 @@
 version: '3.7'
 services:
  s3:
+    restart: always
     image: minio/minio:latest
     container_name: minio_ecg_s3
     ports:
@@ -17,6 +18,9 @@ services:
   build: 
    context: .
    dockerfile: dockerfiles/docker_postgres.conf
+  environment:
+    POSTGRES_USER: ecg_admin
+    POSTGRES_PASSWORD: '?zfQn[{wp;<%3MKq'
   volumes:
       - minio_ecg_dbdata:/var/lib/postgresql/data
  django:
