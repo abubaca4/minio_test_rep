@@ -1,15 +1,15 @@
 version: '3.7'
 services:
- s3:
-  image: minio/minio:latest
-  ports:
+    s3:
+    image: minio/minio:latest
+    ports:
     - "32768:9000"
-  volumes:
+    volumes:
     - minio_ecg_data:/data
-  environment:
-    MINIO_ACCESS_KEY: FAO5WMCSNYII9GNHMEVV6KX4
-    MINIO_SECRET_KEY: rU7dkiJh4XN3dEoXeI9E2wdnIIUdZS9JuyFhG3F7r2UicIVU
-  command: server /data
+    environment:
+    - MINIO_ACCESS_KEY=FAO5WMCSNYII9GNHMEVV6KX4
+    - MINIO_SECRET_KEY=rU7dkiJh4XN3dEoXeI9E2wdnIIUdZS9JuyFhG3F7r2UicIVU
+    command: server /data
  postgres:
   restart: always
   container_name: minio_ecg_postgres
