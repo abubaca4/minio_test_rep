@@ -1,2 +1,18 @@
-создание базы данных postgresql
-psql -U ecg_admin CREATE DATABASE minio_ecg;
+Параметры и их местоположение
+
+docker-compose_dev.yml - compose файл для запуска в отладочном режиме(используя встроенный веб сервер django)
+sudo docker-compose -f docker-compose_dev.yml -p 'minioecgdev' build
+sudo docker-compose -f docker-compose_dev.yml -p 'minioecgdev' up -d
+
+Перед запуском сервера в неотладочном режиме изменить в
+minio_ecg/minio_ecg/settings.py
+параметр DEBUG на False
+
+postgres
+логин пароль задаются в compose файле в env сервиса в POSTGRES_USER и POSTGRES_PASSWORD
+используются в minio_ecg/minio_ecg/settings.py DATABASES
+имя базы данных задаётся в config/pg-setup.sql
+используется в minio_ecg/minio_ecg/settings.py DATABASES
+хост и порт базы данных используются в minio_ecg/minio_ecg/settings.py DATABASES
+порт по умолчанию, хост задаётся именем сервиса в compose. считается что доступ к базе данных откуда либо кроме других контейнеров не нужен(порт не пробрасывается)
+
