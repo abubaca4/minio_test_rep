@@ -83,7 +83,7 @@ DATABASES = {
         'USER': 'ecg_admin',
         'PASSWORD': '?zfQn[{wp;<%3MKq',
         'HOST': 'postgres',
-        'PORT': '32769',
+        'PORT': '5432',
     }
 }
 
