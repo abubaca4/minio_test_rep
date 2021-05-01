@@ -7,5 +7,7 @@ client = Minio(
     secure=False,
 )
 
-if not client.bucket_exists("ecg.storage"):
-    client.make_bucket("ecg.storage")
+bucket_name = "ecg.storage"
+
+if not client.bucket_exists(bucket_name):
+    client.make_bucket(bucket_name)

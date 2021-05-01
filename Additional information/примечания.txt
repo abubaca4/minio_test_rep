@@ -16,3 +16,13 @@ postgres
 хост и порт базы данных используются в minio_ecg/minio_ecg/settings.py DATABASES
 порт по умолчанию, хост задаётся именем сервиса в compose. считается что доступ к базе данных откуда либо кроме других контейнеров не нужен(порт не пробрасывается)
 
+minio
+MINIO_ACCESS_KEY и MINIO_SECRET_KEY задаются в compose файле в env сервиса
+используются в minio_ecg/minio_ecg/settings.py MINIO_ACCESS_KEY и MINIO_SECRET_KEY
+используются в minio_ecg/bucket_create.py в access_key и secret_key
+имя bucket задаётся в minio_ecg/bucket_create.py bucket_name
+используется в minio_ecg/minio_ecg/settings.py MINIO_ECG_BUCKET
+в minio_ecg/bucket_create.py может быть использован как внешний адрес minio сервера так и внутренний(по имени сервиса в compose)
+в minio_ecg/minio_ecg/settings.py MINIO_URL должен быть использован внешний адрес minio сервера, доступный для пользователя
+перед запуском севрера в неотладочном режиме необходимо настроить сертификаты для MinIo и переключить доступ к minio в secure(True) //вынести настройку secure в minio_ecg/minio_ecg/settings.py
+
