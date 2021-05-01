@@ -140,7 +140,7 @@ class ecg_files(models.Model):
             settings.MINIO_URL,
             access_key=settings.MINIO_ACCESS_KEY,
             secret_key=settings.MINIO_SECRET_KEY,
-            secure=False,
+            secure=settings.MINIO_SECURE,
         )
         url = None
         if link_live_duration == None:
@@ -160,7 +160,7 @@ class ecg_files(models.Model):
             settings.MINIO_URL,
             access_key=settings.MINIO_ACCESS_KEY,
             secret_key=settings.MINIO_SECRET_KEY,
-            secure=False,
+            secure=settings.MINIO_SECURE,
         )
         url = None
         if link_live_duration == None:

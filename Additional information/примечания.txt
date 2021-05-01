@@ -24,5 +24,7 @@ MINIO_ACCESS_KEY и MINIO_SECRET_KEY задаются в compose файле в e
 используется в minio_ecg/minio_ecg/settings.py MINIO_ECG_BUCKET
 в minio_ecg/bucket_create.py может быть использован как внешний адрес minio сервера так и внутренний(по имени сервиса в compose)
 в minio_ecg/minio_ecg/settings.py MINIO_URL должен быть использован внешний адрес minio сервера, доступный для пользователя
-перед запуском севрера в неотладочном режиме необходимо настроить сертификаты для MinIo и переключить доступ к minio в secure(True) //вынести настройку secure в minio_ecg/minio_ecg/settings.py
+перед запуском севрера в неотладочном режиме необходимо настроить сертификаты для MinIo и изменить secure в minio_ecg/bucket_create.py и MINIO_SECURE в minio_ecg/minio_ecg/settings.py на True
+
+
 
