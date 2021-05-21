@@ -125,9 +125,14 @@ class ecg_files(models.Model):
         max_length=40, unique=True, help_text="sha-1 хеш файла")
     sample_frequency = models.IntegerField()
     amplitude_resolution = models.IntegerField()
+    original_name = models.CharField(
+        max_length=200, help_text="Имя загруженного файла")
+
+    def minio_file_name(self) -> str:
+        return (self.file_hash + '.' + self.format)
 
     def file_name(self) -> str:
-        return (self.file_hash + '.' + self.format)
+        return (self.original_name)
 
     class Meta:
         ordering = ["-file_hash"]
@@ -146,11 +151,11 @@ class ecg_files(models.Model):
         if link_live_duration == None:
             url = client.presigned_get_object(
                 settings.MINIO_ECG_BUCKET,
-                self.file_name())
+                self.minio_file_name())
         else:
             url = client.presigned_get_object(
                 settings.MINIO_ECG_BUCKET,
-                self.file_name(),
+                self.minio_file_name(),
                 expires=link_live_duration,
             )
         return url
@@ -166,11 +171,11 @@ class ecg_files(models.Model):
         if link_live_duration == None:
             url = client.presigned_put_object(
                 settings.MINIO_ECG_BUCKET,
-                self.file_name())
+                self.minio_file_name())
         else:
             url = client.presigned_put_object(
                 settings.MINIO_ECG_BUCKET,
-                self.file_name(),
+                self.minio_file_name(),
                 expires=link_live_duration,
             )
         return url

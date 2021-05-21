@@ -4,6 +4,7 @@ var amplitude_resolution = document.getElementById('id_amplitude_resolution_fiel
 var fileInput = document.getElementById('id_ecg_file_select'); //поле выбора файла
 var file_hash = document.getElementById('id_file_hash'); //скрытое поле для хеша файла
 var file_format = document.getElementById('id_file_format'); //скрытое поле для расширения файла
+var original_file_name = document.getElementById('id_original_file_name'); //скрытое поле для имени файла
 const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value; //токен для отправки данных на сервер
 
 let field_to_error_list = new Map(); //список полей и предназначенных для них списков ошибок
@@ -12,6 +13,7 @@ field_to_error_list.set('sample_frequency_field', 'sample_frequency_error_list')
 field_to_error_list.set('amplitude_resolution_field', 'amplitude_resolution_error_list');
 field_to_error_list.set('file_hash', 'ecg_file_error_list');
 field_to_error_list.set('file_format', 'ecg_file_error_list');
+field_to_error_list.set('original_file_name', 'ecg_file_error_list');
 
 //очистка списка ошибок
 function error_list_clean() {
@@ -70,6 +72,8 @@ async function getSha1FromFile(inputFile) {
 }
 //при каждом выборе другого файла
 fileInput.addEventListener("change", async function (evt) {
+    //имя файла
+    original_file_name.value = fileInput.files[0].name;
     //разделение имени файла на несколько подстрок для получения расширения файла
     const splitFileName = fileInput.files[0].name.split('.');
     //пустое значение если файл не имеет расширения(для дальнейшей проверки)
@@ -114,6 +118,7 @@ document.getElementById('ecg_upload_form').addEventListener("submit", async func
     formData.append('amplitude_resolution_field', amplitude_resolution.value);
     formData.append('file_format', file_format.value);
     formData.append('file_hash', file_hash.value);
+    formData.append('original_file_name', original_file_name.value);
 
     //отправка данных на сервер
     axios({

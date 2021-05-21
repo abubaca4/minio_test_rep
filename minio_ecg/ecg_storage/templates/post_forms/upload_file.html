@@ -36,6 +36,7 @@
         </ul>
         {% render_field form.file_hash class+="form-control" type+="hidden" %}
         {% render_field form.file_format class+="form-control" type+="hidden" %}
+        {% render_field form.original_file_name class+="form-control" type+="hidden" %}
     </div>
     <button type="submit" id="check_and_upload" class="btn btn-primary">Загрузить</button>
 </form>

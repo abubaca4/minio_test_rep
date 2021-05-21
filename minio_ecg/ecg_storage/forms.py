@@ -18,7 +18,9 @@ class FileUploadForm(forms.Form):
     file_hash = forms.CharField(
         min_length=40, max_length=40)
     file_format = forms.CharField(
-        min_length=1, max_length=40)
+        min_length=1, max_length=20)
+    original_file_name = forms.CharField(
+        min_length=1, max_length=200)
 
     def clean_ecg_id_field(self):
         data = self.cleaned_data['ecg_id_field']
@@ -42,7 +44,8 @@ class FileUploadForm(forms.Form):
                          format=self.cleaned_data['file_format'],
                          file_hash=self.cleaned_data['file_hash'],
                          sample_frequency=self.cleaned_data['sample_frequency_field'],
-                         amplitude_resolution=self.cleaned_data['amplitude_resolution_field'])
+                         amplitude_resolution=self.cleaned_data['amplitude_resolution_field'],
+                         original_name=self.cleaned_data['original_file_name'])
 
 
 class PatientForm(forms.ModelForm):
