@@ -52,6 +52,16 @@ def ecg_list(request: HttpRequest):
     )
 
 
+def api_ecg_list(request: HttpRequest):
+    resp_dict = {}
+    j = 0
+    for i in ecg.objects.all():
+        resp_dict[j] = {'id': i.id, 'add_date': i.add_date,
+                        'check_date': i.check_date}
+
+    return JsonResponse(resp_dict, safe=False)
+
+
 def file_list(request: HttpRequest):
     form = FileUploadForm()
     return render(
@@ -60,6 +70,8 @@ def file_list(request: HttpRequest):
         context={'form': form, 'file_list': ecg_files.objects.all(
         ), 'page_title': 'Список доступных экг файлов'},
     )
+
+
 
 
 def view_file(request: HttpRequest, id: int):

@@ -34,3 +34,8 @@ urlpatterns += [
     path('edit/file/<int:id>/', views.edit_file, name='file_edit'),
     path('edit/ecg/<int:id>/', views.edit_ecg, name='ecg_edit'),
 ]
+
+urlpatterns += [
+    path('api/ecg_list/', views.api_ecg_list, name='json_ecg_list'),
+    
+]
