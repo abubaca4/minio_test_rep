@@ -58,6 +58,7 @@ def api_ecg_list(request: HttpRequest):
     for i in ecg.objects.all():
         resp_dict[j] = {'id': i.id, 'add_date': i.add_date,
                         'check_date': i.check_date}
+        j += 1
 
     return JsonResponse(resp_dict, safe=False)
 
@@ -72,6 +73,14 @@ def file_list(request: HttpRequest):
     )
 
 
+def api_file_list(request: HttpRequest):
+    resp_dict = {}
+    j = 0
+    for i in ecg_files.objects.all():
+        resp_dict[j] = {'id': i.id, 'ecg_id': i.ecg_id.id}
+        j += 1
+
+    return JsonResponse(resp_dict, safe=False)
 
 
 def view_file(request: HttpRequest, id: int):
