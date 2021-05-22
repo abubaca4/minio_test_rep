@@ -45,4 +45,5 @@ urlpatterns += [
     path('api/source_org/list/', views.api_source_org_list, name='json_source_org_list'),
     path('api/source_org/<int:id>/info/', views.api_source_org_info, name='json_source_org_info'),
     path('api/original_information/list/', views.api_original_information_list, name='json_original_information_list'),
+    path('api/original_information/<int:id>/info/', views.api_original_information_info, name='json_original_information_info'),
 ]

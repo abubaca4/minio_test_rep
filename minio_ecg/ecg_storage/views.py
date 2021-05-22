@@ -186,6 +186,14 @@ def api_source_org_info(request: HttpRequest, id: int):
                          "description": org_inst.description})
 
 
+def api_original_information_info(request: HttpRequest, id: int):
+    inf_inst = get_object_or_404(original_information, id=id)
+    return JsonResponse({"ecg_id": inf_inst.ecg_id.id,
+                         "idMedServ": inf_inst.idMedServ,
+                         "patientId": inf_inst.patientId,
+                         "result": inf_inst.result})
+
+
 def edit_patient(request: HttpRequest, id: int):
     patient = get_object_or_404(patients, id=id)
     if request.method == 'POST':
