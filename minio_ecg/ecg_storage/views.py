@@ -169,6 +169,12 @@ def api_ecg_info(request: HttpRequest, id: int):
                          'org_id': ecg_inst.org_id.id})
 
 
+def api_source_org_info(request: HttpRequest, id: int):
+    org_inst = get_object_or_404(source_org, id=id)
+    return JsonResponse({"name": org_inst.name,
+                         "description": org_inst.description})
+
+
 def edit_patient(request: HttpRequest, id: int):
     patient = get_object_or_404(patients, id=id)
     if request.method == 'POST':
