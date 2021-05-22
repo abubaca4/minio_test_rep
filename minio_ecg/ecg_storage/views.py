@@ -20,6 +20,14 @@ from datetime import timedelta
 # Create your views here.
 
 
+def get_ForeginKey_id_or_empty(key):
+    try:
+        id = key.id
+    except AttributeError:
+        id = None
+    return id
+
+
 def index(request: HttpRequest):
     return render(
         request,
@@ -174,10 +182,10 @@ def api_ecg_info(request: HttpRequest, id: int):
     return JsonResponse({'check_date': ecg_inst.check_date,
                          'add_date': ecg_inst.add_date,
                          'patient_age': ecg_inst.patient_age,
-                         'patient_id': ecg_inst.patient_id.id,
-                         'source_user': ecg_inst.source_user.username,
+                         'patient_id': get_ForeginKey_id_or_empty(ecg_inst.patient_id),
+                         'source_user': get_ForeginKey_id_or_empty(ecg_inst.source_user),
                          'access_id': ecg_inst.access_id.id,
-                         'org_id': ecg_inst.org_id.id})
+                         'org_id': get_ForeginKey_id_or_empty(ecg_inst.org_id)})
 
 
 def api_source_org_info(request: HttpRequest, id: int):
@@ -254,12 +262,13 @@ def add_ecg_file(request: HttpRequest):
     sample_frequency = request.GET.get('sample_frequency', '')
     amplitude_resolution = request.GET.get('amplitude_resolution', '')
     form = FileUploadForm(initial={'ecg_id_field': ecg_id, 'sample_frequency_field': sample_frequency,
-                                    'amplitude_resolution_field': amplitude_resolution})
+                                   'amplitude_resolution_field': amplitude_resolution})
     return render(
         request,
         'post_forms/upload_file.html',
         context={'form': form, 'page_title': 'Добаление ecg файла'},
     )
+
 
 @login_required
 def api_add_ecg_file(request: HttpRequest):
