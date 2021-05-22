@@ -83,6 +83,16 @@ def api_file_list(request: HttpRequest):
     return JsonResponse(resp_dict, safe=False)
 
 
+def api_patient_list(request: HttpRequest):
+    resp_dict = {}
+    j = 0
+    for i in patients.objects.all():
+        resp_dict[j] = {'id': i.id, 'sex': i.sex}
+        j += 1
+
+    return JsonResponse(resp_dict, safe=False)
+
+
 def view_file(request: HttpRequest, id: int):
     file_obj = get_object_or_404(ecg_files, id=id)
     return render(

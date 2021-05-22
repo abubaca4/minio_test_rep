@@ -40,4 +40,5 @@ urlpatterns += [
     path('api/ecg/<int:id>/info/', views.api_ecg_info, name='json_ecg_info'),
     path('api/file/list/', views.api_file_list, name='json_file_list'),
     path('api/file/<int:id>/info/', views.api_file_info, name='json_file_info'),
+    path('api/patient/list/', views.api_patient_list, name='json_patient_list'),
 ]
