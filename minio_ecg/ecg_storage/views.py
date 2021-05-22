@@ -128,6 +128,15 @@ def view_patient(request: HttpRequest, id: int):
     )
 
 
+def api_patient_info(request: HttpRequest, id: int):
+    patient = get_object_or_404(patients, id=id)
+    return JsonResponse({"sex": patient.sex,
+                         "birthdate": patient.birthdate,
+                         "name": patient.name,
+                         "last_name": patient.last_name,
+                         "middle_name": patient.middle_name})
+
+
 def view_ecg(request: HttpRequest, id: int):
     ecg_inst = get_object_or_404(ecg, id=id)
     form = EcgForm(instance=ecg_inst)
