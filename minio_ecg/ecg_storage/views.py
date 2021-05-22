@@ -118,6 +118,17 @@ def view_ecg(request: HttpRequest, id: int):
     )
 
 
+def api_ecg_info(request: HttpRequest, id: int):
+    ecg_inst = get_object_or_404(ecg, id=id)
+    return JsonResponse({'check_date': ecg_inst.check_date,
+                         'add_date': ecg_inst.add_date,
+                         'patient_age': ecg_inst.patient_age,
+                         'patient_id': ecg_inst.patient_id.id,
+                         'source_user': ecg_inst.source_user.username,
+                         'access_id': ecg_inst.access_id.id,
+                         'org_id': ecg_inst.org_id.id})
+
+
 def edit_patient(request: HttpRequest, id: int):
     patient = get_object_or_404(patients, id=id)
     if request.method == 'POST':
