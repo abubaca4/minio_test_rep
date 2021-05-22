@@ -92,6 +92,16 @@ def view_file(request: HttpRequest, id: int):
     )
 
 
+def api_file_info(request: HttpRequest, id: int):
+    file_obj = get_object_or_404(ecg_files, id=id)
+    return JsonResponse({'ecg_id': file_obj.ecg_id.id,
+                         'format': file_obj.format,
+                         'file_hash': file_obj.file_hash,
+                         'sample_frequency': file_obj.sample_frequency,
+                         'amplitude_resolution': file_obj.amplitude_resolution,
+                         'original_name': file_obj.original_name})
+
+
 def file_download_link(request: HttpRequest, id: int):
     file_obj = get_object_or_404(ecg_files, id=id)
     # добавить проверку на доступ к файлу
