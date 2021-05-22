@@ -36,6 +36,6 @@ urlpatterns += [
 ]
 
 urlpatterns += [
-    path('api/ecg_list/', views.api_ecg_list, name='json_ecg_list'),
-    path('api/files_list/', views.api_file_list, name='json_file_list'),
+    path('api/ecg/list/', views.api_ecg_list, name='json_ecg_list'),
+    path('api/files/list/', views.api_file_list, name='json_file_list'),
 ]
