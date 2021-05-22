@@ -40,6 +40,7 @@ urlpatterns += [
     path('api/ecg/<int:id>/info/', views.api_ecg_info, name='json_ecg_info'),
     path('api/file/list/', views.api_file_list, name='json_file_list'),
     path('api/file/<int:id>/info/', views.api_file_info, name='json_file_info'),
+    path('api/file/add/', views.api_add_ecg_file, name='json_file_add'),
     path('api/patient/list/', views.api_patient_list, name='json_patient_list'),
     path('api/patient/<int:id>/info/', views.api_patient_info, name='json_patient_info'),
     path('api/source_org/list/', views.api_source_org_list, name='json_source_org_list'),

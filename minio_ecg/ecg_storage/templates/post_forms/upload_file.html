@@ -4,6 +4,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/core.min.js" integrity="sha512-PQsdzDthPKtp230uD7lunTQw6CwNTPnd5LP3e3/+afg9cNkrL7UsfWXT3EW5Ar9XZ5SdADcPDXs1BAWNa9OZ7Q==" crossorigin="anonymous" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/sha1.min.js" integrity="sha512-i19qg3d5yHSYVRQizhWLdZCvkenhD2RGY8QZtGhKgw+nu8b7Urndqpov9LwQWeZsIECGjaU0BW9k8lZc5V61uA==" crossorigin="anonymous" defer></script>
 {% load static %}
+<script type="text/javascript">
+var api_upload_url = "{% url 'json_file_add' %}";
+</script>
 <script src="{% static 'js/file_upload.js' %}" defer></script>
 {% endblock %}
 {% block content %}

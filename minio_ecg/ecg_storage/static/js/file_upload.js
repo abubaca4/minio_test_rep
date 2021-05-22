@@ -123,7 +123,7 @@ document.getElementById('ecg_upload_form').addEventListener("submit", async func
     //отправка данных на сервер
     axios({
         method: "post",
-        url: document.URL,
+        url: api_upload_url,
         data: formData,
         headers: { "Content-Type": "multipart/form-data", "X-CSRFToken": csrftoken },
     })

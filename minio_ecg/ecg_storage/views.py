@@ -250,31 +250,32 @@ def edit_ecg(request: HttpRequest, id: int):
 
 @login_required
 def add_ecg_file(request: HttpRequest):
-    if request.method == 'POST':
-        form = FileUploadForm(request.POST)
-        if form.is_valid():
-            dict_response = {}
-            new_ecg_file = form.make_obj_from_form()
-            new_ecg_file.save()
-            dict_response['upload_url'] = new_ecg_file.get_minio_upload_link(
-                link_live_duration=timedelta(minutes=5))
-            dict_response['ecg_file_id'] = new_ecg_file.id
-            dict_response['redirect_url'] = new_ecg_file.get_absolute_url()
-            return JsonResponse(dict_response)
-        else:
-            data = form.errors
-            return JsonResponse(data, status=400, safe=False)
+    ecg_id = request.GET.get('ecg_id', '')
+    sample_frequency = request.GET.get('sample_frequency', '')
+    amplitude_resolution = request.GET.get('amplitude_resolution', '')
+    form = FileUploadForm(initial={'ecg_id_field': ecg_id, 'sample_frequency_field': sample_frequency,
+                                    'amplitude_resolution_field': amplitude_resolution})
+    return render(
+        request,
+        'post_forms/upload_file.html',
+        context={'form': form, 'page_title': 'Добаление ecg файла'},
+    )
+
+@login_required
+def api_add_ecg_file(request: HttpRequest):
+    form = FileUploadForm(request.POST)
+    if form.is_valid():
+        dict_response = {}
+        new_ecg_file = form.make_obj_from_form()
+        new_ecg_file.save()
+        dict_response['upload_url'] = new_ecg_file.get_minio_upload_link(
+            link_live_duration=timedelta(minutes=5))
+        dict_response['ecg_file_id'] = new_ecg_file.id
+        dict_response['redirect_url'] = new_ecg_file.get_absolute_url()
+        return JsonResponse(dict_response)
     else:
-        ecg_id = request.GET.get('ecg_id', '')
-        sample_frequency = request.GET.get('sample_frequency', '')
-        amplitude_resolution = request.GET.get('amplitude_resolution', '')
-        form = FileUploadForm(initial={'ecg_id_field': ecg_id, 'sample_frequency_field': sample_frequency,
-                                       'amplitude_resolution_field': amplitude_resolution})
-        return render(
-            request,
-            'post_forms/upload_file.html',
-            context={'form': form, 'page_title': 'Добаление ecg файла'},
-        )
+        data = form.errors
+        return JsonResponse(data, status=400, safe=False)
 
 
 @login_required
