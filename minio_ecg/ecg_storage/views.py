@@ -123,6 +123,17 @@ def api_original_information_list(request: HttpRequest):
     return JsonResponse(resp_dict, safe=False)
 
 
+def api_access_groups_list(request: HttpRequest):
+    resp_dict = {}
+    j = 0
+    for i in access_groups.objects.all():
+        resp_dict[j] = {"id": i.id, "name": i.name,
+                        'description': i.description}
+        j += 1
+
+    return JsonResponse(resp_dict, safe=False)
+
+
 def view_file(request: HttpRequest, id: int):
     file_obj = get_object_or_404(ecg_files, id=id)
     return render(
