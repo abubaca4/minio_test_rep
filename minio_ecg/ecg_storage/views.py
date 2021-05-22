@@ -9,6 +9,7 @@ from .models import ecg_files
 from .models import patients
 from .models import access_groups
 from .models import source_org
+from .models import original_information
 
 from .forms import FileUploadForm
 from .forms import PatientForm
@@ -99,6 +100,16 @@ def api_source_org_list(request: HttpRequest):
     j = 0
     for i in source_org.objects.all():
         resp_dict[j] = {"id": i.id, "name": i.name}
+        j += 1
+
+    return JsonResponse(resp_dict, safe=False)
+
+
+def api_original_information_list(request: HttpRequest):
+    resp_dict = {}
+    j = 0
+    for i in original_information.objects.all():
+        resp_dict[j] = {"id": i.id, "ecg_id": i.ecg_id.id}
         j += 1
 
     return JsonResponse(resp_dict, safe=False)
