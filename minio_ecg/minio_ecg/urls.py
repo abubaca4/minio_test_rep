@@ -15,9 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from django.views.generic import RedirectView
-# from django.conf.urls.static import static  # заменить на отдачу статики другим способом
-# from django.conf import settings  # заменить на отдачу статики другим способом
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,12 +25,5 @@ urlpatterns += [
 ]
 
 urlpatterns += [
-    path('ecg/', include('ecg_storage.urls')),
+    path('', include('ecg_storage.urls')),
 ]
-
-urlpatterns += [
-    path('', RedirectView.as_view(url='/ecg/', permanent=True)),
-]
-
-# заменить на отдачу статики другим способом
-# urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
