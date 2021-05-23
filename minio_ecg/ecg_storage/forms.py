@@ -20,7 +20,7 @@ class FileUploadForm(forms.Form):
     file_format = forms.CharField(
         min_length=1, max_length=20)
     original_file_name = forms.CharField(
-        min_length=1, max_length=200)
+        min_length=1, max_length=200, label='Оригинальное имя файла')
 
     def clean_ecg_id_field(self):
         data = self.cleaned_data['ecg_id_field']

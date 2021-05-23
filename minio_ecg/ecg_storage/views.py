@@ -238,11 +238,12 @@ def edit_file(request: HttpRequest, id: int):
             file_obj.ecg_id = ecg_inst
             file_obj.sample_frequency = form.cleaned_data['sample_frequency_field']
             file_obj.amplitude_resolution = form.cleaned_data['amplitude_resolution_field']
+            file_obj.original_name = form.cleaned_data['original_file_name']
             file_obj.save()
             return redirect(file_obj.get_absolute_url())
     else:
         form = FileUploadForm(initial={'ecg_id_field': file_obj.ecg_id.id, 'sample_frequency_field': file_obj.sample_frequency,
-                                       'amplitude_resolution_field': file_obj.amplitude_resolution, 'file_hash': file_obj.file_hash, 'file_format': file_obj.format})
+                                       'amplitude_resolution_field': file_obj.amplitude_resolution, 'file_hash': file_obj.file_hash, 'file_format': file_obj.format, 'original_file_name': file_obj.original_name})
 
     return render(
         request,
