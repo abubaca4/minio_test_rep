@@ -284,6 +284,7 @@ def add_ecg_file(request: HttpRequest):
     )
 
 
+@csrf_exempt
 @login_required
 def api_add_ecg_file(request: HttpRequest):
     form = FileUploadForm(request.POST)

@@ -125,7 +125,7 @@ document.getElementById('ecg_upload_form').addEventListener("submit", async func
         method: "post",
         url: api_upload_url,
         data: formData,
-        headers: { "Content-Type": "multipart/form-data", "X-CSRFToken": csrftoken },
+        headers: { "Content-Type": "multipart/form-data", /*"X-CSRFToken": csrftoken*/ },
     })
         .then(function (response) {
             //Если сервер вернул что в данных нет ошибки
