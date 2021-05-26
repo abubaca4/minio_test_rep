@@ -36,6 +36,7 @@ urlpatterns += [
 ]
 
 urlpatterns += [
+    path("api/auth/", views.api_login, name="json_login"),
     path('api/ecg/list/', views.api_ecg_list, name='json_ecg_list'),
     path('api/ecg/<int:id>/info/', views.api_ecg_info, name='json_ecg_info'),
     path('api/file/list/', views.api_file_list, name='json_file_list'),

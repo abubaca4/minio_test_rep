@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from django.http import JsonResponse, HttpRequest
+from django.http import JsonResponse, HttpRequest, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate, login
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 
@@ -329,3 +331,23 @@ def add_ecg(request: HttpRequest):
     return render(request,
                   'post_forms/common_form.html',
                   context={'form': form, 'page_title': 'Добавление ЭКГ'},)
+
+
+@csrf_exempt
+def api_login(request: HttpRequest):
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '').strip()
+        if username and password:
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    data = {'success': True}
+                else:
+                    data = {'success': False, 'error': 'User is not active'}
+            else:
+                data = {'success': False,
+                        'error': 'Wrong username and/or password'}
+        return JsonResponse(data)
+    return HttpResponseBadRequest()
