@@ -335,6 +335,20 @@ def add_ecg(request: HttpRequest):
 
 
 @csrf_exempt
+def api_add_ecg(request: HttpRequest):
+    if request.method == 'POST':
+        form = EcgForm(request.POST)
+        if form.is_valid():
+            result = form.save()
+            dict_response = {}
+            dict_response["id"] = result.id
+            return JsonResponse(dict_response)
+        else:
+            JsonResponse(form.errors, status=400, safe=False)
+    return HttpResponseBadRequest()
+
+
+@csrf_exempt
 def api_login(request: HttpRequest):
     if request.method == 'POST':
         username = request.POST.get('username', '').strip()
