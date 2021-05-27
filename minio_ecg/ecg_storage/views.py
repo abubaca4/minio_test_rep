@@ -273,6 +273,20 @@ def edit_ecg(request: HttpRequest, id: int):
                   context={'form': form, 'page_title': 'Редактирование ЭКГ'},)
 
 
+@csrf_exempt
+@login_required
+def api_edit_ecg(request: HttpRequest, id: int):
+    ecg_inst = get_object_or_404(ecg, id=id)
+    if request.method == 'POST':
+        form = EcgForm(request.POST, instance=ecg_inst)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse(form.errors, status=400, safe=False)
+    return HttpResponseBadRequest()
+
+
 @login_required
 def add_ecg_file(request: HttpRequest):
     ecg_id = request.GET.get('ecg_id', '')
