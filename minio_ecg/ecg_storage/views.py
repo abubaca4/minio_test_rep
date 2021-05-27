@@ -347,6 +347,8 @@ def add_ecg(request: HttpRequest):
         form = EcgForm(request.POST)
         if form.is_valid():
             result = form.save()
+            result.source_user = request.user
+            result.save()
             return redirect(result.get_absolute_url())
     else:
         group = access_groups.objects.filter(name='Default')[0]
@@ -365,6 +367,8 @@ def api_add_ecg(request: HttpRequest):
         form = EcgForm(request.POST)
         if form.is_valid():
             result = form.save()
+            result.source_user = request.user
+            result.save()
             dict_response = {}
             dict_response["id"] = result.id
             return JsonResponse(dict_response)

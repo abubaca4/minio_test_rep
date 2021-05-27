@@ -33,4 +33,4 @@ class EcgForm(forms.ModelForm):
     class Meta:
         model = ecg
         fields = ['check_date', 'patient_age',
-                  'patient_id', 'source_user', 'access_id', 'org_id']
+                  'patient_id', 'access_id', 'org_id']

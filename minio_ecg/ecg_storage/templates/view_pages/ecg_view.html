@@ -6,7 +6,7 @@
 <p>{{ form.check_date.help_text }}: {{ form.check_date.value }}</p>
 <p>{{ form.patient_age.help_text }}: {{ form.patient_age.value }}</p>
 <p>{{ form.patient_id.help_text }}: <a href="{{form.instance.patient_id.get_absolute_url}}">{{ form.patient_id.value }}</a></p>
-<p>{{ form.source_user.help_text }}: {{ form.source_user.value }}</p>
+<p>Пользователь, загрузивший экг на сайт: {{ form.instance.source_user }}</p>
 <p>{{ form.access_id.help_text }}: {{ form.access_id.value }}</p>
 <p>{{ form.org_id.help_text }}: {{ form.org_id.value }}</p>
 <p><a href="{% url 'ecg_edit' form.instance.id %}">Редактировать</a></p>
