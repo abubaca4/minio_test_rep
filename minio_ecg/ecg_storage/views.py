@@ -17,6 +17,7 @@ from .forms import FileUploadForm
 from .forms import PatientForm
 from .forms import EcgForm
 from .forms import FileEditForm
+from .forms import OriginalInformation
 
 from datetime import timedelta
 
@@ -400,6 +401,19 @@ def api_add_ecg(request: HttpRequest):
             dict_response = {}
             dict_response["id"] = result.id
             return JsonResponse(dict_response)
+        else:
+            JsonResponse(form.errors, status=400, safe=False)
+    return HttpResponseBadRequest()
+
+
+@csrf_exempt
+@login_required
+def api_add_original_information(request: HttpRequest):
+    if request.method == 'POST':
+        form = OriginalInformation(request.POST)
+        if form.is_valid():
+            result = form.save()
+            return JsonResponse({'id': result.id})
         else:
             JsonResponse(form.errors, status=400, safe=False)
     return HttpResponseBadRequest()

@@ -57,6 +57,8 @@ urlpatterns += [
          views.api_source_org_info, name='json_source_org_info'),
     path('api/original_information/list/', views.api_original_information_list,
          name='json_original_information_list'),
+    path('api/original_information/add/', views.api_add_original_information,
+         name='json_original_information_add'),
     path('api/original_information/<int:id>/info/',
          views.api_original_information_info, name='json_original_information_info'),
     path('api/access_groups/list/', views.api_access_groups_list,
