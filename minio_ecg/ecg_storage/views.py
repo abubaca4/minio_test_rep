@@ -91,7 +91,7 @@ def api_file_list(request: HttpRequest):
     resp_dict = {}
     j = 0
     for i in ecg_files.objects.all():
-        resp_dict[j] = {'id': i.id, 'ecg_id': i.ecg_id.id}
+        resp_dict[j] = {'id': i.id, 'original_name': i.original_name}
         j += 1
 
     return JsonResponse(resp_dict, safe=False)
