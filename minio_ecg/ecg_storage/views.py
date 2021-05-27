@@ -231,6 +231,19 @@ def edit_patient(request: HttpRequest, id: int):
                   'post_forms/common_form.html',
                   context={'form': form, 'page_title': 'Редактирование пациента'},)
 
+@csrf_exempt
+@login_required
+def api_edit_patient(request: HttpRequest, id: int):
+    patient = get_object_or_404(patients, id=id)
+    if request.method == 'POST':
+        form = PatientForm(request.POST, instance=patient)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse(form.errors, status=400, safe=False)
+    return HttpResponseBadRequest()
+
 
 @login_required
 def edit_file(request: HttpRequest, id: int):
@@ -312,18 +325,20 @@ def add_ecg_file(request: HttpRequest):
 @csrf_exempt
 @login_required
 def api_add_ecg_file(request: HttpRequest):
-    form = FileUploadForm(request.POST)
-    if form.is_valid():
-        dict_response = {}
-        new_ecg_file = form.save()
-        dict_response['upload_url'] = new_ecg_file.get_minio_upload_link(
-            link_live_duration=timedelta(minutes=5))
-        dict_response['ecg_file_id'] = new_ecg_file.id
-        dict_response['redirect_url'] = new_ecg_file.get_absolute_url()
-        return JsonResponse(dict_response)
-    else:
-        data = form.errors
-        return JsonResponse(data, status=400, safe=False)
+    if request.method == 'POST':
+        form = FileUploadForm(request.POST)
+        if form.is_valid():
+            dict_response = {}
+            new_ecg_file = form.save()
+            dict_response['upload_url'] = new_ecg_file.get_minio_upload_link(
+                link_live_duration=timedelta(minutes=5))
+            dict_response['ecg_file_id'] = new_ecg_file.id
+            dict_response['redirect_url'] = new_ecg_file.get_absolute_url()
+            return JsonResponse(dict_response)
+        else:
+            data = form.errors
+            return JsonResponse(data, status=400, safe=False)
+    return HttpResponseBadRequest()
 
 
 @login_required
