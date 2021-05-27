@@ -232,6 +232,7 @@ def edit_patient(request: HttpRequest, id: int):
                   'post_forms/common_form.html',
                   context={'form': form, 'page_title': 'Редактирование пациента'},)
 
+
 @csrf_exempt
 @login_required
 def api_edit_patient(request: HttpRequest, id: int):
@@ -306,6 +307,20 @@ def api_edit_ecg(request: HttpRequest, id: int):
             return JsonResponse({'success': True})
         else:
             return JsonResponse(form.errors, status=400, safe=False)
+    return HttpResponseBadRequest()
+
+
+@csrf_exempt
+@login_required
+def api_edit_original_information(request: HttpRequest, id: int):
+    or_inf = get_object_or_404(original_information, id=id)
+    if request.method == 'POST':
+        form = OriginalInformation(request.POST, instance=or_inf)
+        if form.is_valid():
+            result = form.save()
+            return JsonResponse({'success': True})
+        else:
+            JsonResponse(form.errors, status=400, safe=False)
     return HttpResponseBadRequest()
 
 
