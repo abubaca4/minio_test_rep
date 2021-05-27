@@ -341,6 +341,19 @@ def add_patient(request: HttpRequest):
                   context={'form': form, 'page_title': 'Добавление пациента'},)
 
 
+@csrf_exempt
+@login_required
+def api_add_patient(request: HttpRequest):
+    if request.method == 'POST':
+        form = PatientForm(request.POST)
+        if form.is_valid():
+            result = form.save()
+            return JsonResponse({'id': result.id})
+        else:
+            JsonResponse(form.errors, status=400, safe=False)
+    return HttpResponseBadRequest()
+
+
 @login_required
 def add_ecg(request: HttpRequest):
     if request.method == 'POST':
