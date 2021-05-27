@@ -6,27 +6,25 @@
     {% csrf_token %}
     {% load widget_tweaks %}
     <div class="form-group">
-        {{ form.ecg_id_field.label_tag }}
-        {% render_field form.ecg_id_field class+="form-control" %}
-        {{ form.ecg_id_field.errors }}
+        {{ form.ecg_id.label_tag }}
+        {% render_field form.ecg_id class+="form-control" %}
+        {{ form.ecg_id.errors }}
     </div>
     <div class="form-group">
-        {{ form.sample_frequency_field.label_tag }}
-        {% render_field form.sample_frequency_field class+="form-control" %}
-        {{ form.sample_frequency_field.errors }}
+        {{ form.sample_frequency.label_tag }}
+        {% render_field form.sample_frequency class+="form-control" %}
+        {{ form.sample_frequency.errors }}
     </div>
     <div class="form-group">
-        {{ form.amplitude_resolution_field.label_tag }}
-        {% render_field form.amplitude_resolution_field class+="form-control" %}
-        {{ form.amplitude_resolution_field.errors }}
+        {{ form.amplitude_resolution.label_tag }}
+        {% render_field form.amplitude_resolution class+="form-control" %}
+        {{ form.amplitude_resolution.errors }}
     </div>
     <div class="form-group">
-        {{ form.original_file_name.label_tag }}
-        {% render_field form.original_file_name class+="form-control" %}
-        {{ form.original_file_name.errors }}
+        {{ form.original_name.label_tag }}
+        {% render_field form.original_name class+="form-control" %}
+        {{ form.original_name.errors }}
     </div>
-    {% render_field form.file_hash class+="form-control" type+="hidden" %}
-    {% render_field form.file_format class+="form-control" type+="hidden" %}
     <button type="submit" id="check_and_upload" class="btn btn-primary">Отправить</button>
 </form>
 {% endblock %}

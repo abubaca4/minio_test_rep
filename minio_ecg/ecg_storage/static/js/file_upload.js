@@ -1,19 +1,19 @@
-var ecg_id = document.getElementById('id_ecg_id_field'); //переменная поля экг id
-var sample_frequency = document.getElementById('id_sample_frequency_field'); //переменная поля Sample frequency
-var amplitude_resolution = document.getElementById('id_amplitude_resolution_field'); //переменная Amplitude resolution
+var ecg_id = document.getElementById('id_ecg_id'); //переменная поля экг id
+var sample_frequency = document.getElementById('id_sample_frequency'); //переменная поля Sample frequency
+var amplitude_resolution = document.getElementById('id_amplitude_resolution'); //переменная Amplitude resolution
 var fileInput = document.getElementById('id_ecg_file_select'); //поле выбора файла
 var file_hash = document.getElementById('id_file_hash'); //скрытое поле для хеша файла
-var file_format = document.getElementById('id_file_format'); //скрытое поле для расширения файла
-var original_file_name = document.getElementById('id_original_file_name'); //скрытое поле для имени файла
+var file_format = document.getElementById('id_format'); //скрытое поле для расширения файла
+var original_file_name = document.getElementById('id_original_name'); //скрытое поле для имени файла
 const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value; //токен для отправки данных на сервер
 
 let field_to_error_list = new Map(); //список полей и предназначенных для них списков ошибок
-field_to_error_list.set('ecg_id_field', 'ecg_id_error_list');
-field_to_error_list.set('sample_frequency_field', 'sample_frequency_error_list');
-field_to_error_list.set('amplitude_resolution_field', 'amplitude_resolution_error_list');
+field_to_error_list.set('ecg_id', 'ecg_id_error_list');
+field_to_error_list.set('sample_frequency', 'sample_frequency_error_list');
+field_to_error_list.set('amplitude_resolution', 'amplitude_resolution_error_list');
 field_to_error_list.set('file_hash', 'ecg_file_error_list');
-field_to_error_list.set('file_format', 'ecg_file_error_list');
-field_to_error_list.set('original_file_name', 'ecg_file_error_list');
+field_to_error_list.set('format', 'ecg_file_error_list');
+field_to_error_list.set('original_name', 'ecg_file_error_list');
 
 //очистка списка ошибок
 function error_list_clean() {
@@ -96,7 +96,7 @@ document.getElementById('ecg_upload_form').addEventListener("submit", async func
     error_list_clean();
 
     if (file_format.value.length < 1) {
-        let error_list = document.getElementById(field_to_error_list.get('file_format'));
+        let error_list = document.getElementById(field_to_error_list.get('format'));
         let li_ = document.createElement('li');
         li_.innerHTML = "Ошибка получения расширения файла(возможно файл не имеет расширения)";
         error_list.appendChild(li_);
@@ -113,12 +113,12 @@ document.getElementById('ecg_upload_form').addEventListener("submit", async func
 
     //формирование post запроса
     var formData = new FormData();
-    formData.append('ecg_id_field', ecg_id.value);
-    formData.append('sample_frequency_field', sample_frequency.value);
-    formData.append('amplitude_resolution_field', amplitude_resolution.value);
-    formData.append('file_format', file_format.value);
+    formData.append('ecg_id', ecg_id.value);
+    formData.append('sample_frequency', sample_frequency.value);
+    formData.append('amplitude_resolution', amplitude_resolution.value);
+    formData.append('format', file_format.value);
     formData.append('file_hash', file_hash.value);
-    formData.append('original_file_name', original_file_name.value);
+    formData.append('original_name', original_file_name.value);
 
     //отправка данных на сервер
     axios({

@@ -1,11 +1,16 @@
 {% extends "base_generic.html" %}
 {% block title %}<title>{{page_title}}</title>
-<script src="https://cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js" integrity="sha256-JLmknTdUZeZZ267LP9qB+/DT7tvxOOKctSKeUC2KT6E=" crossorigin="anonymous" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/core.min.js" integrity="sha512-PQsdzDthPKtp230uD7lunTQw6CwNTPnd5LP3e3/+afg9cNkrL7UsfWXT3EW5Ar9XZ5SdADcPDXs1BAWNa9OZ7Q==" crossorigin="anonymous" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/sha1.min.js" integrity="sha512-i19qg3d5yHSYVRQizhWLdZCvkenhD2RGY8QZtGhKgw+nu8b7Urndqpov9LwQWeZsIECGjaU0BW9k8lZc5V61uA==" crossorigin="anonymous" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js"
+    integrity="sha256-JLmknTdUZeZZ267LP9qB+/DT7tvxOOKctSKeUC2KT6E=" crossorigin="anonymous" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/core.min.js"
+    integrity="sha512-PQsdzDthPKtp230uD7lunTQw6CwNTPnd5LP3e3/+afg9cNkrL7UsfWXT3EW5Ar9XZ5SdADcPDXs1BAWNa9OZ7Q=="
+    crossorigin="anonymous" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/sha1.min.js"
+    integrity="sha512-i19qg3d5yHSYVRQizhWLdZCvkenhD2RGY8QZtGhKgw+nu8b7Urndqpov9LwQWeZsIECGjaU0BW9k8lZc5V61uA=="
+    crossorigin="anonymous" defer></script>
 {% load static %}
 <script type="text/javascript">
-var api_upload_url = "{% url 'json_file_add' %}";
+    var api_upload_url = "{% url 'json_file_add' %}";
 </script>
 <script src="{% static 'js/file_upload.js' %}" defer></script>
 {% endblock %}
@@ -15,20 +20,20 @@ var api_upload_url = "{% url 'json_file_add' %}";
     {% csrf_token %}
     {% load widget_tweaks %}
     <div class="form-group">
-        {{ form.ecg_id_field.label_tag }}
-        {% render_field form.ecg_id_field class+="form-control" %}
+        {{ form.ecg_id.label_tag }}
+        {% render_field form.ecg_id class+="form-control" %}
         <ul id="ecg_id_error_list" class="errorlist">
         </ul>
     </div>
     <div class="form-group">
-        {{ form.sample_frequency_field.label_tag }}
-        {% render_field form.sample_frequency_field class+="form-control" %}
+        {{ form.sample_frequency.label_tag }}
+        {% render_field form.sample_frequency class+="form-control" %}
         <ul id="sample_frequency_error_list" class="errorlist">
         </ul>
     </div>
     <div class="form-group">
-        {{ form.amplitude_resolution_field.label_tag }}
-        {% render_field form.amplitude_resolution_field class+="form-control" %}
+        {{ form.amplitude_resolution.label_tag }}
+        {% render_field form.amplitude_resolution class+="form-control" %}
         <ul id="amplitude_resolution_error_list" class="errorlist">
         </ul>
     </div>
@@ -38,8 +43,8 @@ var api_upload_url = "{% url 'json_file_add' %}";
         <ul id="ecg_file_error_list" class="errorlist">
         </ul>
         {% render_field form.file_hash class+="form-control" type+="hidden" %}
-        {% render_field form.file_format class+="form-control" type+="hidden" %}
-        {% render_field form.original_file_name class+="form-control" type+="hidden" %}
+        {% render_field form.format class+="form-control" type+="hidden" %}
+        {% render_field form.original_name class+="form-control" type+="hidden" %}
     </div>
     <button type="submit" id="check_and_upload" class="btn btn-primary">Загрузить</button>
 </form>

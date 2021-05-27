@@ -9,43 +9,18 @@ from .models import ecg_files
 from .models import patients
 
 
-class FileUploadForm(forms.Form):
-    ecg_id_field = forms.IntegerField(
-        label='ID экг для которого загружается файл')
-    sample_frequency_field = forms.IntegerField(label='Sample frequency')
-    amplitude_resolution_field = forms.IntegerField(
-        label='Amplitude resolution')
-    file_hash = forms.CharField(
-        min_length=40, max_length=40)
-    file_format = forms.CharField(
-        min_length=1, max_length=20)
-    original_file_name = forms.CharField(
-        min_length=1, max_length=200, label='Оригинальное имя файла')
+class FileUploadForm(forms.ModelForm):
+    class Meta:
+        model = ecg_files
+        fields = ['ecg_id', 'format', 'file_hash',
+                  'sample_frequency', 'amplitude_resolution', 'original_name']
 
-    def clean_ecg_id_field(self):
-        data = self.cleaned_data['ecg_id_field']
 
-        if ecg.objects.filter(id=int(data)).count() == 0:
-            raise ValidationError(_('Экг с таким ID не существует'))
-
-        return data
-
-    def clean_file_hash(self):
-        data = self.cleaned_data['file_hash']
-
-        if ecg_files.objects.filter(file_hash=data).count() != 0:
-            raise ValidationError(_('Такой файл уже существует'))
-
-        return data
-
-    def make_obj_from_form(self):
-        ecg_inst = ecg.objects.filter(id=self.cleaned_data['ecg_id_field'])[0]
-        return ecg_files(ecg_id=ecg_inst,
-                         format=self.cleaned_data['file_format'],
-                         file_hash=self.cleaned_data['file_hash'],
-                         sample_frequency=self.cleaned_data['sample_frequency_field'],
-                         amplitude_resolution=self.cleaned_data['amplitude_resolution_field'],
-                         original_name=self.cleaned_data['original_file_name'])
+class FileEditForm(forms.ModelForm):
+    class Meta:
+        model = ecg_files
+        fields = ['ecg_id', 'sample_frequency',
+                  'amplitude_resolution', 'original_name']
 
 
 class PatientForm(forms.ModelForm):

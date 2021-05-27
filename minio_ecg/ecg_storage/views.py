@@ -16,6 +16,7 @@ from .models import original_information
 from .forms import FileUploadForm
 from .forms import PatientForm
 from .forms import EcgForm
+from .forms import FileEditForm
 
 from datetime import timedelta
 
@@ -235,19 +236,12 @@ def edit_patient(request: HttpRequest, id: int):
 def edit_file(request: HttpRequest, id: int):
     file_obj = get_object_or_404(ecg_files, id=id)
     if request.method == 'POST':
-        form = FileUploadForm(request.POST)
+        form = FileEditForm(request.POST, instance=file_obj)
         if form.is_valid():
-            ecg_inst = ecg.objects.filter(
-                id=form.cleaned_data['ecg_id_field'])[0]
-            file_obj.ecg_id = ecg_inst
-            file_obj.sample_frequency = form.cleaned_data['sample_frequency_field']
-            file_obj.amplitude_resolution = form.cleaned_data['amplitude_resolution_field']
-            file_obj.original_name = form.cleaned_data['original_file_name']
-            file_obj.save()
+            r = form.save()
             return redirect(file_obj.get_absolute_url())
     else:
-        form = FileUploadForm(initial={'ecg_id_field': file_obj.ecg_id.id, 'sample_frequency_field': file_obj.sample_frequency,
-                                       'amplitude_resolution_field': file_obj.amplitude_resolution, 'file_hash': file_obj.file_hash, 'file_format': file_obj.format, 'original_file_name': file_obj.original_name})
+        form = FileEditForm(instance=file_obj)
 
     return render(
         request,
@@ -255,6 +249,20 @@ def edit_file(request: HttpRequest, id: int):
         context={'form': form,
                  'page_title': 'Редактирование записи ecg файла'},
     )
+
+
+@csrf_exempt
+@login_required
+def api_edit_ecg_file(request: HttpRequest, id: int):
+    file_obj = get_object_or_404(ecg_files, id=id)
+    if request.method == 'POST':
+        form = FileEditForm(request.POST, instance=file_obj)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse(form.errors, status=400, safe=False)
+    return HttpResponseBadRequest()
 
 
 @login_required
@@ -307,8 +315,7 @@ def api_add_ecg_file(request: HttpRequest):
     form = FileUploadForm(request.POST)
     if form.is_valid():
         dict_response = {}
-        new_ecg_file = form.make_obj_from_form()
-        new_ecg_file.save()
+        new_ecg_file = form.save()
         dict_response['upload_url'] = new_ecg_file.get_minio_upload_link(
             link_live_duration=timedelta(minutes=5))
         dict_response['ecg_file_id'] = new_ecg_file.id
