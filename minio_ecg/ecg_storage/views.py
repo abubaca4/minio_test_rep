@@ -390,7 +390,7 @@ def add_ecg(request: HttpRequest):
     if request.method == 'POST':
         form = EcgForm(request.POST)
         if form.is_valid():
-            result = form.save()
+            result = form.save(commit=False)
             result.source_user = request.user
             result.save()
             return redirect(result.get_absolute_url())
@@ -410,7 +410,7 @@ def api_add_ecg(request: HttpRequest):
     if request.method == 'POST':
         form = EcgForm(request.POST)
         if form.is_valid():
-            result = form.save()
+            result = form.save(commit=False)
             result.source_user = request.user
             result.save()
             dict_response = {}
