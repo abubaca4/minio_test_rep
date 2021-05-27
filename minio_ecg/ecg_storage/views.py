@@ -215,6 +215,7 @@ def api_original_information_info(request: HttpRequest, id: int):
                          "result": inf_inst.result})
 
 
+@login_required
 def edit_patient(request: HttpRequest, id: int):
     patient = get_object_or_404(patients, id=id)
     if request.method == 'POST':
@@ -230,6 +231,7 @@ def edit_patient(request: HttpRequest, id: int):
                   context={'form': form, 'page_title': 'Редактирование пациента'},)
 
 
+@login_required
 def edit_file(request: HttpRequest, id: int):
     file_obj = get_object_or_404(ecg_files, id=id)
     if request.method == 'POST':
@@ -255,6 +257,7 @@ def edit_file(request: HttpRequest, id: int):
     )
 
 
+@login_required
 def edit_ecg(request: HttpRequest, id: int):
     ecg_inst = get_object_or_404(ecg, id=id)
     if request.method == 'POST':
@@ -335,6 +338,7 @@ def add_ecg(request: HttpRequest):
 
 
 @csrf_exempt
+@login_required
 def api_add_ecg(request: HttpRequest):
     if request.method == 'POST':
         form = EcgForm(request.POST)
