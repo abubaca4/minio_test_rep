@@ -82,7 +82,7 @@ def file_list(request: HttpRequest):
     return render(
         request,
         'list_pages/file_list.html',
-        context={'form': form, 'file_list': ecg_files.objects.all(
+        context={'form': form, 'file_list': ecg_files.objects.select_related("ecg_id").all(
         ), 'page_title': 'Список доступных экг файлов'},
     )
 
