@@ -68,10 +68,69 @@ def ecg_list(request: HttpRequest):
 
 def api_ecg_list(request: HttpRequest):
     resp_dict = {}
+    query = ecg.objects
+
+    check_date = False
+    add_date = False
+    patient_age = False
+    patient_id = False
+    source_user = False
+    access_id = False
+    org_id = False
+
+    field_list = request.GET.get('fields', '').split(',')
+
+    if 'check_date' in field_list:
+        check_date = True
+        query.only('check_date')
+
+    if 'add_date' in field_list:
+        add_date = True
+        query.only('add_date')
+
+    if 'patient_age' in field_list:
+        patient_age = True
+        query.only('patient_age')
+
+    if 'patient_id' in field_list:
+        patient_id = True
+        query.only('patient_id')
+        query.select_related("patient_id")
+
+    if 'source_user' in field_list:
+        source_user = True
+        query.only('source_user')
+        query.select_related("source_user")
+
+    if 'access_id' in field_list:
+        access_id = True
+        query.only('access_id')
+        query.select_related("access_id")
+
+    if 'org_id' in field_list:
+        org_id = True
+        query.only('org_id')
+        query.select_related("org_id")
+
     j = 0
-    for i in ecg.objects.all():
-        resp_dict[j] = {'id': i.id, 'add_date': i.add_date,
-                        'check_date': i.check_date}
+    for i in query.all():
+        resp_dict[j] = {'id': i.id}
+        if check_date:
+            resp_dict[j]['check_date'] = i.check_date
+        if add_date:
+            resp_dict[j]['add_date'] = i.add_date
+        if patient_age:
+            resp_dict[j]['patient_age'] = i.patient_age
+        if patient_id:
+            resp_dict[j]['patient_id'] = get_ForeginKey_id_or_empty(
+                i.patient_id)
+        if source_user:
+            resp_dict[j]['source_user'] = get_ForeginKey_id_or_empty(
+                i.source_user)
+        if access_id:
+            resp_dict[j]['access_id'] = get_ForeginKey_id_or_empty(i.access_id)
+        if org_id:
+            resp_dict[j]['org_id'] = get_ForeginKey_id_or_empty(i.org_id)
         j += 1
 
     return JsonResponse(resp_dict, safe=False)
@@ -199,7 +258,7 @@ def api_ecg_info(request: HttpRequest, id: int):
                          'patient_age': ecg_inst.patient_age,
                          'patient_id': get_ForeginKey_id_or_empty(ecg_inst.patient_id),
                          'source_user': get_ForeginKey_id_or_empty(ecg_inst.source_user),
-                         'access_id': ecg_inst.access_id.id,
+                         'access_id': get_ForeginKey_id_or_empty(ecg_inst.access_id),
                          'org_id': get_ForeginKey_id_or_empty(ecg_inst.org_id)})
 
 
