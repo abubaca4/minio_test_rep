@@ -148,9 +148,57 @@ def file_list(request: HttpRequest):
 
 def api_file_list(request: HttpRequest):
     resp_dict = {}
+    query = ecg_files.objects
+
+    ecg_id = False
+    format = False
+    file_hash = False
+    sample_frequency = False
+    amplitude_resolution = False
+    original_name = False
+
+    field_list = request.GET.get('fields', '').split(',')
+
+    if 'ecg_id' in field_list:
+        ecg_id = True
+        query.only('ecg_id')
+        query.select_related("ecg_id")
+
+    if 'format' in field_list:
+        format = True
+        query.only('format')
+
+    if 'file_hash' in field_list:
+        file_hash = True
+        query.only('file_hash')
+
+    if 'sample_frequency' in field_list:
+        sample_frequency = True
+        query.only('sample_frequency')
+
+    if 'amplitude_resolution' in field_list:
+        amplitude_resolution = True
+        query.only('amplitude_resolution')
+
+    if 'original_name' in field_list:
+        original_name = True
+        query.only('original_name')
+
     j = 0
-    for i in ecg_files.objects.all():
-        resp_dict[j] = {'id': i.id, 'original_name': i.original_name}
+    for i in query.all():
+        resp_dict[j] = {'id': i.id}
+        if ecg_id:
+            resp_dict[j]['ecg_id'] = i.ecg_id.id
+        if format:
+            resp_dict[j]['ecg_id'] = i.format
+        if file_hash:
+            resp_dict[j]['file_hash'] = i.file_hash
+        if sample_frequency:
+            resp_dict[j]['sample_frequency'] = i.sample_frequency
+        if amplitude_resolution:
+            resp_dict[j]['amplitude_resolution'] = i.amplitude_resolution
+        if original_name:
+            resp_dict[j]['original_name'] = i.original_name
         j += 1
 
     return JsonResponse(resp_dict, safe=False)
