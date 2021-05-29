@@ -1,5 +1,4 @@
 from django.urls import path
-from django.urls import re_path
 
 from . import views
 
@@ -11,7 +10,7 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    re_path(r'^add/file/$', views.add_ecg_file, name='add_ecg_file_page'),
+    path('add/file/', views.add_ecg_file, name='add_ecg_file_page'),
     path('add/patient/', views.add_patient, name='add_patient_page'),
     path('add/ecg/', views.add_ecg, name='add_ecg_page'),
 ]
@@ -37,11 +36,11 @@ urlpatterns += [
 
 urlpatterns += [
     path("api/auth/", views.api_login, name="json_login"),
-    re_path(r'^api/ecg/list/$', views.api_ecg_list, name='json_ecg_list'),
+    path('api/ecg/list/', views.api_ecg_list, name='json_ecg_list'),
     path('api/ecg/add/', views.api_add_ecg, name='json_ecg_add'),
     path('api/ecg/<int:id>/info/', views.api_ecg_info, name='json_ecg_info'),
     path('api/ecg/<int:id>/edit/', views.api_edit_ecg, name='json_ecg_edit'),
-    re_path(r'^api/file/list/$', views.api_file_list, name='json_file_list'),
+    path('api/file/list/', views.api_file_list, name='json_file_list'),
     path('api/file/add/', views.api_add_ecg_file, name='json_file_add'),
     path('api/file/<int:id>/info/', views.api_file_info, name='json_file_info'),
     path('api/file/<int:id>/edit/', views.api_edit_ecg_file, name='json_file_edit'),

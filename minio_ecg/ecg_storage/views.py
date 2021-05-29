@@ -1,3 +1,4 @@
+from django.db.models import query
 from django.shortcuts import render
 from django.http import JsonResponse, HttpRequest, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
@@ -182,8 +183,12 @@ def api_patient_list(request: HttpRequest):
 
 def api_source_org_list(request: HttpRequest):
     resp_dict = {}
+    query = source_org.objects
+
+
+
     j = 0
-    for i in source_org.objects.all():
+    for i in query.all():
         resp_dict[j] = {"id": i.id, "name": i.name}
         j += 1
 
@@ -402,8 +407,8 @@ def add_ecg_file(request: HttpRequest):
     ecg_id = request.GET.get('ecg_id', '')
     sample_frequency = request.GET.get('sample_frequency', '')
     amplitude_resolution = request.GET.get('amplitude_resolution', '')
-    form = FileUploadForm(initial={'ecg_id_field': ecg_id, 'sample_frequency_field': sample_frequency,
-                                   'amplitude_resolution_field': amplitude_resolution})
+    form = FileUploadForm(initial={'ecg_id': ecg_id, 'sample_frequency': sample_frequency,
+                                   'amplitude_resolution': amplitude_resolution})
     return render(
         request,
         'post_forms/upload_file.html',
