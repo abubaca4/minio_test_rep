@@ -68,7 +68,6 @@ def ecg_list(request: HttpRequest):
 
 
 def api_ecg_list(request: HttpRequest):
-    resp_dict = {}
     query = ecg.objects
 
     field_list = request.GET.get('fields', '').split(',')
@@ -99,12 +98,7 @@ def api_ecg_list(request: HttpRequest):
         query = query.select_related("org_id")
         requested_fields.append('org_id')
 
-    j = 0
-    for i in query.values(*requested_fields):
-        resp_dict[j] = i
-        j += 1
-
-    return JsonResponse(resp_dict, safe=False)
+    return JsonResponse(list(query.values(*requested_fields)), safe=False)
 
 
 def file_list(request: HttpRequest):
@@ -118,7 +112,6 @@ def file_list(request: HttpRequest):
 
 
 def api_file_list(request: HttpRequest):
-    resp_dict = {}
     query = ecg_files.objects
 
     field_list = request.GET.get('fields', '').split(',')
@@ -143,17 +136,11 @@ def api_file_list(request: HttpRequest):
     if 'original_name' in field_list:
         requested_fields.append('original_name')
 
-    j = 0
-    for i in query.values(*requested_fields):
-        resp_dict[j] = i
-        j += 1
-
-    return JsonResponse(resp_dict, safe=False)
+    return JsonResponse(list(query.values(*requested_fields)), safe=False)
 
 
 def api_patient_list(request: HttpRequest):
-    resp_dict = {}
-    query =  patients.objects
+    query = patients.objects
 
     field_list = request.GET.get('fields', '').split(',')
     requested_fields = ['id']
@@ -172,17 +159,11 @@ def api_patient_list(request: HttpRequest):
 
     if 'middle_name' in field_list:
         requested_fields.append('middle_name')
-    
-    j = 0
-    for i in query.values(*requested_fields):
-        resp_dict[j] = i
-        j += 1
 
-    return JsonResponse(resp_dict, safe=False)
+    return JsonResponse(list(query.values(*requested_fields)), safe=False)
 
 
 def api_source_org_list(request: HttpRequest):
-    resp_dict = {}
     query = source_org.objects
 
     field_list = request.GET.get('fields', '').split(',')
@@ -194,16 +175,10 @@ def api_source_org_list(request: HttpRequest):
     if 'description' in field_list:
         requested_fields.append('description')
 
-    j = 0
-    for i in query.values(*requested_fields):
-        resp_dict[j] = i
-        j += 1
-
-    return JsonResponse(resp_dict, safe=False)
+    return JsonResponse(list(query.values(*requested_fields)), safe=False)
 
 
 def api_original_information_list(request: HttpRequest):
-    resp_dict = {}
     query = original_information.objects
 
     field_list = request.GET.get('fields', '').split(',')
@@ -222,16 +197,10 @@ def api_original_information_list(request: HttpRequest):
     if 'result' in field_list:
         requested_fields.append('result')
 
-    j = 0
-    for i in query.values(*requested_fields):
-        resp_dict[j] = i
-        j += 1
-
-    return JsonResponse(resp_dict, safe=False)
+    return JsonResponse(list(query.values(*requested_fields)), safe=False)
 
 
 def api_access_groups_list(request: HttpRequest):
-    resp_dict = {}
     query = access_groups.objects
 
     field_list = request.GET.get('fields', '').split(',')
@@ -243,12 +212,7 @@ def api_access_groups_list(request: HttpRequest):
     if 'description' in field_list:
         requested_fields.append('description')
 
-    j = 0
-    for i in query.values(*requested_fields):
-        resp_dict[j] = i
-        j += 1
-
-    return JsonResponse(resp_dict, safe=False)
+    return JsonResponse(list(query.values(*requested_fields)), safe=False)
 
 
 def view_file(request: HttpRequest, id: int):
