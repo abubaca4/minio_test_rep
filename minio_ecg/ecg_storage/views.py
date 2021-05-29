@@ -185,11 +185,18 @@ def api_source_org_list(request: HttpRequest):
     resp_dict = {}
     query = source_org.objects
 
+    field_list = request.GET.get('fields', '').split(',')
+    requested_fields = ['id']
 
+    if 'name' in field_list:
+        requested_fields.append('name')
+
+    if 'description' in field_list:
+        requested_fields.append('description')
 
     j = 0
-    for i in query.all():
-        resp_dict[j] = {"id": i.id, "name": i.name}
+    for i in query.values(*requested_fields):
+        resp_dict[j] = i
         j += 1
 
     return JsonResponse(resp_dict, safe=False)
