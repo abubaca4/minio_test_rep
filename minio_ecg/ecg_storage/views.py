@@ -204,9 +204,27 @@ def api_source_org_list(request: HttpRequest):
 
 def api_original_information_list(request: HttpRequest):
     resp_dict = {}
+    query = original_information.objects
+
+    field_list = request.GET.get('fields', '').split(',')
+    requested_fields = ['id']
+
+    if 'ecg_id' in field_list:
+        query = query.select_related("ecg_id")
+        requested_fields.append('ecg_id')
+
+    if 'idMedServ' in field_list:
+        requested_fields.append('idMedServ')
+
+    if 'patientId' in field_list:
+        requested_fields.append('patientId')
+
+    if 'result' in field_list:
+        requested_fields.append('result')
+
     j = 0
-    for i in original_information.objects.all():
-        resp_dict[j] = {"id": i.id, "ecg_id": i.ecg_id.id}
+    for i in query.values(*requested_fields):
+        resp_dict[j] = i
         j += 1
 
     return JsonResponse(resp_dict, safe=False)
