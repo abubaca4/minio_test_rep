@@ -232,10 +232,20 @@ def api_original_information_list(request: HttpRequest):
 
 def api_access_groups_list(request: HttpRequest):
     resp_dict = {}
+    query = access_groups.objects
+
+    field_list = request.GET.get('fields', '').split(',')
+    requested_fields = ['id']
+
+    if 'name' in field_list:
+        requested_fields.append('name')
+
+    if 'description' in field_list:
+        requested_fields.append('description')
+
     j = 0
-    for i in access_groups.objects.all():
-        resp_dict[j] = {"id": i.id, "name": i.name,
-                        'description': i.description}
+    for i in query.values(*requested_fields):
+        resp_dict[j] = i
         j += 1
 
     return JsonResponse(resp_dict, safe=False)
