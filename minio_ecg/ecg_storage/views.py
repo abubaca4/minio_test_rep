@@ -82,34 +82,27 @@ def api_ecg_list(request: HttpRequest):
 
     if 'check_date' in field_list:
         check_date = True
-        query.only('check_date')
 
     if 'add_date' in field_list:
         add_date = True
-        query.only('add_date')
 
     if 'patient_age' in field_list:
         patient_age = True
-        query.only('patient_age')
 
     if 'patient_id' in field_list:
         patient_id = True
-        query.only('patient_id')
         query.select_related("patient_id")
 
     if 'source_user' in field_list:
         source_user = True
-        query.only('source_user')
         query.select_related("source_user")
 
     if 'access_id' in field_list:
         access_id = True
-        query.only('access_id')
         query.select_related("access_id")
 
     if 'org_id' in field_list:
         org_id = True
-        query.only('org_id')
         query.select_related("org_id")
 
     j = 0
@@ -161,28 +154,22 @@ def api_file_list(request: HttpRequest):
 
     if 'ecg_id' in field_list:
         ecg_id = True
-        query.only('ecg_id')
         query.select_related("ecg_id")
 
     if 'format' in field_list:
         format = True
-        query.only('format')
 
     if 'file_hash' in field_list:
         file_hash = True
-        query.only('file_hash')
 
     if 'sample_frequency' in field_list:
         sample_frequency = True
-        query.only('sample_frequency')
 
     if 'amplitude_resolution' in field_list:
         amplitude_resolution = True
-        query.only('amplitude_resolution')
 
     if 'original_name' in field_list:
         original_name = True
-        query.only('original_name')
 
     j = 0
     for i in query.all():
