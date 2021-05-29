@@ -152,9 +152,29 @@ def api_file_list(request: HttpRequest):
 
 def api_patient_list(request: HttpRequest):
     resp_dict = {}
+    query =  patients.objects
+
+    field_list = request.GET.get('fields', '').split(',')
+    requested_fields = ['id']
+
+    if 'sex' in field_list:
+        requested_fields.append('sex')
+
+    if 'birthdate' in field_list:
+        requested_fields.append('birthdate')
+
+    if 'name' in field_list:
+        requested_fields.append('name')
+
+    if 'last_name' in field_list:
+        requested_fields.append('last_name')
+
+    if 'middle_name' in field_list:
+        requested_fields.append('middle_name')
+    
     j = 0
-    for i in patients.objects.all():
-        resp_dict[j] = {'id': i.id, 'sex': i.sex}
+    for i in query.values(*requested_fields):
+        resp_dict[j] = i
         j += 1
 
     return JsonResponse(resp_dict, safe=False)
