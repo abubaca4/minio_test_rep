@@ -91,19 +91,19 @@ def api_ecg_list(request: HttpRequest):
 
     if 'patient_id' in field_list:
         patient_id = True
-        query.select_related("patient_id")
+        query = query.select_related("patient_id")
 
     if 'source_user' in field_list:
         source_user = True
-        query.select_related("source_user")
+        query = query.select_related("source_user")
 
     if 'access_id' in field_list:
         access_id = True
-        query.select_related("access_id")
+        query = query.select_related("access_id")
 
     if 'org_id' in field_list:
         org_id = True
-        query.select_related("org_id")
+        query = query.select_related("org_id")
 
     j = 0
     for i in query.all():
@@ -154,7 +154,7 @@ def api_file_list(request: HttpRequest):
 
     if 'ecg_id' in field_list:
         ecg_id = True
-        query.select_related("ecg_id")
+        query = query.select_related("ecg_id")
 
     if 'format' in field_list:
         format = True
