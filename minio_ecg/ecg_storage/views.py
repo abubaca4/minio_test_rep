@@ -70,60 +70,37 @@ def api_ecg_list(request: HttpRequest):
     resp_dict = {}
     query = ecg.objects
 
-    check_date = False
-    add_date = False
-    patient_age = False
-    patient_id = False
-    source_user = False
-    access_id = False
-    org_id = False
-
     field_list = request.GET.get('fields', '').split(',')
+    requested_fields = ['id']
 
     if 'check_date' in field_list:
-        check_date = True
+        requested_fields.append('check_date')
 
     if 'add_date' in field_list:
-        add_date = True
+        requested_fields.append('add_date')
 
     if 'patient_age' in field_list:
-        patient_age = True
+        requested_fields.append('patient_age')
 
     if 'patient_id' in field_list:
-        patient_id = True
         query = query.select_related("patient_id")
+        requested_fields.append('patient_id')
 
     if 'source_user' in field_list:
-        source_user = True
         query = query.select_related("source_user")
+        requested_fields.append('source_user')
 
     if 'access_id' in field_list:
-        access_id = True
         query = query.select_related("access_id")
+        requested_fields.append('access_id')
 
     if 'org_id' in field_list:
-        org_id = True
         query = query.select_related("org_id")
+        requested_fields.append('org_id')
 
     j = 0
-    for i in query.all():
-        resp_dict[j] = {'id': i.id}
-        if check_date:
-            resp_dict[j]['check_date'] = i.check_date
-        if add_date:
-            resp_dict[j]['add_date'] = i.add_date
-        if patient_age:
-            resp_dict[j]['patient_age'] = i.patient_age
-        if patient_id:
-            resp_dict[j]['patient_id'] = get_ForeginKey_id_or_empty(
-                i.patient_id)
-        if source_user:
-            resp_dict[j]['source_user'] = get_ForeginKey_id_or_empty(
-                i.source_user)
-        if access_id:
-            resp_dict[j]['access_id'] = get_ForeginKey_id_or_empty(i.access_id)
-        if org_id:
-            resp_dict[j]['org_id'] = get_ForeginKey_id_or_empty(i.org_id)
+    for i in query.values(*requested_fields):
+        resp_dict[j] = i
         j += 1
 
     return JsonResponse(resp_dict, safe=False)
@@ -143,49 +120,31 @@ def api_file_list(request: HttpRequest):
     resp_dict = {}
     query = ecg_files.objects
 
-    ecg_id = False
-    format = False
-    file_hash = False
-    sample_frequency = False
-    amplitude_resolution = False
-    original_name = False
-
     field_list = request.GET.get('fields', '').split(',')
+    requested_fields = ['id']
 
     if 'ecg_id' in field_list:
-        ecg_id = True
         query = query.select_related("ecg_id")
+        requested_fields.append('ecg_id')
 
     if 'format' in field_list:
-        format = True
+        requested_fields.append('format')
 
     if 'file_hash' in field_list:
-        file_hash = True
+        requested_fields.append('file_hash')
 
     if 'sample_frequency' in field_list:
-        sample_frequency = True
+        requested_fields.append('sample_frequency')
 
     if 'amplitude_resolution' in field_list:
-        amplitude_resolution = True
+        requested_fields.append('amplitude_resolution')
 
     if 'original_name' in field_list:
-        original_name = True
+        requested_fields.append('original_name')
 
     j = 0
-    for i in query.all():
-        resp_dict[j] = {'id': i.id}
-        if ecg_id:
-            resp_dict[j]['ecg_id'] = i.ecg_id.id
-        if format:
-            resp_dict[j]['ecg_id'] = i.format
-        if file_hash:
-            resp_dict[j]['file_hash'] = i.file_hash
-        if sample_frequency:
-            resp_dict[j]['sample_frequency'] = i.sample_frequency
-        if amplitude_resolution:
-            resp_dict[j]['amplitude_resolution'] = i.amplitude_resolution
-        if original_name:
-            resp_dict[j]['original_name'] = i.original_name
+    for i in query.values(*requested_fields):
+        resp_dict[j] = i
         j += 1
 
     return JsonResponse(resp_dict, safe=False)
