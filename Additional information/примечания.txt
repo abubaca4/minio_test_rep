@@ -1,12 +1,22 @@
 Параметры и их местоположение
 
 docker-compose_dev.yml - compose файл для запуска в отладочном режиме(используя встроенный веб сервер django)
-sudo docker-compose -f docker-compose_dev.yml -p 'minioecgdev' build
-sudo docker-compose -f docker-compose_dev.yml -p 'minioecgdev' up -d
+sudo docker-compose -f docker-compose_dev.yml build
+sudo docker-compose -f docker-compose_dev.yml up -d
 
 Перед запуском сервера в неотладочном режиме изменить в
 minio_ecg/minio_ecg/settings.py
 параметр DEBUG на False
+
+Запуск в неотладочном режиме
+sudo docker-compose build
+sudo docker-compose up -d
+
+после первого запуска в неотладочном режиме подключиться к консоли django контейнера и выполнить
+python /code/bucket_create.py
+python /code/manage.py collectstatic --noinput
+python /code/manage.py migrate
+python /code/manage.py createsuperuser --noinput
 
 postgres
 логин пароль задаются в compose файле в env сервиса в POSTGRES_USER и POSTGRES_PASSWORD
