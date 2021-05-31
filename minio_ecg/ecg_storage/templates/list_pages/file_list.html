@@ -10,7 +10,7 @@
     {% for copies in file_list %}
     <tr>
         <td><a href="{{copies.get_absolute_url}}">{{copies.id}}</a></td>
-        <td><a href="{{copies.ecg_id.get_absolute_url}}">{{copies.ecg_id.id}}</a></td>
+        <td><a href="{{copies.ecg_id.get_absolute_url}}">{{copies.ecg_id_id}}</a></td>
     </tr>
     {% endfor %}
 </table>

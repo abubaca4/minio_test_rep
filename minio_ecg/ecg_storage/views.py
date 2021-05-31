@@ -25,14 +25,6 @@ from datetime import timedelta
 # Create your views here.
 
 
-def get_ForeginKey_id_or_empty(key):
-    try:
-        id = key.id
-    except AttributeError:
-        id = None
-    return id
-
-
 def index(request: HttpRequest):
     return render(
         request,
@@ -226,7 +218,7 @@ def view_file(request: HttpRequest, id: int):
 
 def api_file_info(request: HttpRequest, id: int):
     file_obj = get_object_or_404(ecg_files, id=id)
-    return JsonResponse({'ecg_id': file_obj.ecg_id.id,
+    return JsonResponse({'ecg_id': file_obj.ecg_id_id,
                          'format': file_obj.format,
                          'file_hash': file_obj.file_hash,
                          'sample_frequency': file_obj.sample_frequency,
@@ -274,10 +266,10 @@ def api_ecg_info(request: HttpRequest, id: int):
     return JsonResponse({'check_date': ecg_inst.check_date,
                          'add_date': ecg_inst.add_date,
                          'patient_age': ecg_inst.patient_age,
-                         'patient_id': get_ForeginKey_id_or_empty(ecg_inst.patient_id),
-                         'source_user': get_ForeginKey_id_or_empty(ecg_inst.source_user),
-                         'access_id': get_ForeginKey_id_or_empty(ecg_inst.access_id),
-                         'org_id': get_ForeginKey_id_or_empty(ecg_inst.org_id)})
+                         'patient_id': ecg_inst.patient_id_id,
+                         'source_user': ecg_inst.source_user_id,
+                         'access_id': ecg_inst.access_id_id,
+                         'org_id': ecg_inst.org_id_id})
 
 
 def api_source_org_info(request: HttpRequest, id: int):
@@ -288,7 +280,7 @@ def api_source_org_info(request: HttpRequest, id: int):
 
 def api_original_information_info(request: HttpRequest, id: int):
     inf_inst = get_object_or_404(original_information, id=id)
-    return JsonResponse({"ecg_id": inf_inst.ecg_id.id,
+    return JsonResponse({"ecg_id": inf_inst.ecg_id_id,
                          "idMedServ": inf_inst.idMedServ,
                          "patientId": inf_inst.patientId,
                          "result": inf_inst.result})
