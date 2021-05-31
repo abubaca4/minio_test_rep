@@ -26,25 +26,12 @@ from datetime import timedelta
 
 
 def take_part_from_QuerySet(q: query.QuerySet, part: list):
-    b1 = None
-    b2 = None
+    b1 = int(part[0]) if part[0].isdecimal() else 0
+    b2 = int(part[1]) if len(part) > 1 and part[1].isdecimal() else None
 
-    try:
-        b1 = int(part[0])
-        if len(part) > 1:
-            try:
-                b2 = int(part[1])
-            except ValueError as verr:
-                pass
-    except ValueError as verr:
-        pass
-
-    if b1 is not None:
-        if b2 is not None:
-            return q[b1:b2]
-        else:
-            return q[b1:]
-    return q
+    if b2 is not None:
+        return q[b1:b2]
+    return q[b1:]
 
 
 def check_and_return_correct_fields(input_fields: list, avaliable_fields: list):
