@@ -25,6 +25,36 @@ from datetime import timedelta
 # Create your views here.
 
 
+def take_part_from_QuerySet(q: query.QuerySet, part: list):
+    b1 = None
+    b2 = None
+
+    try:
+        b1 = int(part[0])
+        if len(part) > 1:
+            try:
+                b2 = int(part[1])
+            except ValueError as verr:
+                pass
+    except ValueError as verr:
+        pass
+
+    if b1 is not None:
+        if b2 is not None:
+            return q[b1:b2]
+        else:
+            return q[b1:]
+    return q
+
+
+def check_and_return_correct_fields(input_fields: list, avaliable_fields: list):
+    result = []
+    for i in input_fields:
+        if i in avaliable_fields:
+            result.append(i)
+    return result
+
+
 def index(request: HttpRequest):
     return render(
         request,
@@ -60,37 +90,22 @@ def ecg_list(request: HttpRequest):
 
 
 def api_ecg_list(request: HttpRequest):
-    query = ecg.objects
+    q = ecg.objects
+
+    permitted_fields = ['check_date', 'add_date', 'patient_age',
+                        'patient_id', 'source_user', 'access_id', 'org_id']
 
     field_list = request.GET.get('fields', '').split(',')
-    requested_fields = ['id']
+    requested_fields = check_and_return_correct_fields(
+        field_list, permitted_fields)
+    requested_fields.insert(0, "id")
 
-    if 'check_date' in field_list:
-        requested_fields.append('check_date')
+    q = q.values(*requested_fields)
 
-    if 'add_date' in field_list:
-        requested_fields.append('add_date')
+    part = request.GET.get('part', '').split(',')
+    q = take_part_from_QuerySet(q, part)
 
-    if 'patient_age' in field_list:
-        requested_fields.append('patient_age')
-
-    if 'patient_id' in field_list:
-        query = query.select_related("patient_id")
-        requested_fields.append('patient_id')
-
-    if 'source_user' in field_list:
-        query = query.select_related("source_user")
-        requested_fields.append('source_user')
-
-    if 'access_id' in field_list:
-        query = query.select_related("access_id")
-        requested_fields.append('access_id')
-
-    if 'org_id' in field_list:
-        query = query.select_related("org_id")
-        requested_fields.append('org_id')
-
-    return JsonResponse(list(query.values(*requested_fields)), safe=False)
+    return JsonResponse(list(q), safe=False)
 
 
 def file_list(request: HttpRequest):
@@ -104,107 +119,94 @@ def file_list(request: HttpRequest):
 
 
 def api_file_list(request: HttpRequest):
-    query = ecg_files.objects
+    q = ecg_files.objects
+
+    permitted_fields = ['ecg_id', 'format', 'file_hash',
+                        'sample_frequency', 'amplitude_resolution', 'original_name']
 
     field_list = request.GET.get('fields', '').split(',')
-    requested_fields = ['id']
+    requested_fields = check_and_return_correct_fields(
+        field_list, permitted_fields)
+    requested_fields.insert(0, "id")
 
-    if 'ecg_id' in field_list:
-        query = query.select_related("ecg_id")
-        requested_fields.append('ecg_id')
+    q = q.values(*requested_fields)
 
-    if 'format' in field_list:
-        requested_fields.append('format')
+    part = request.GET.get('part', '').split(',')
+    q = take_part_from_QuerySet(q, part)
 
-    if 'file_hash' in field_list:
-        requested_fields.append('file_hash')
-
-    if 'sample_frequency' in field_list:
-        requested_fields.append('sample_frequency')
-
-    if 'amplitude_resolution' in field_list:
-        requested_fields.append('amplitude_resolution')
-
-    if 'original_name' in field_list:
-        requested_fields.append('original_name')
-
-    return JsonResponse(list(query.values(*requested_fields)), safe=False)
+    return JsonResponse(list(q), safe=False)
 
 
 def api_patient_list(request: HttpRequest):
-    query = patients.objects
+    q = patients.objects
+
+    permitted_fields = ['sex', 'birthdate', 'name', 'last_name', 'middle_name']
 
     field_list = request.GET.get('fields', '').split(',')
-    requested_fields = ['id']
+    requested_fields = check_and_return_correct_fields(
+        field_list, permitted_fields)
+    requested_fields.insert(0, "id")
 
-    if 'sex' in field_list:
-        requested_fields.append('sex')
+    q = q.values(*requested_fields)
 
-    if 'birthdate' in field_list:
-        requested_fields.append('birthdate')
+    part = request.GET.get('part', '').split(',')
+    q = take_part_from_QuerySet(q, part)
 
-    if 'name' in field_list:
-        requested_fields.append('name')
-
-    if 'last_name' in field_list:
-        requested_fields.append('last_name')
-
-    if 'middle_name' in field_list:
-        requested_fields.append('middle_name')
-
-    return JsonResponse(list(query.values(*requested_fields)), safe=False)
+    return JsonResponse(list(q), safe=False)
 
 
 def api_source_org_list(request: HttpRequest):
-    query = source_org.objects
+    q = source_org.objects
+
+    permitted_fields = ['name', 'description']
 
     field_list = request.GET.get('fields', '').split(',')
-    requested_fields = ['id']
+    requested_fields = check_and_return_correct_fields(
+        field_list, permitted_fields)
+    requested_fields.insert(0, "id")
 
-    if 'name' in field_list:
-        requested_fields.append('name')
+    q = q.values(*requested_fields)
 
-    if 'description' in field_list:
-        requested_fields.append('description')
+    part = request.GET.get('part', '').split(',')
+    q = take_part_from_QuerySet(q, part)
 
-    return JsonResponse(list(query.values(*requested_fields)), safe=False)
+    return JsonResponse(list(q), safe=False)
 
 
 def api_original_information_list(request: HttpRequest):
-    query = original_information.objects
+    q = original_information.objects
+
+    permitted_fields = ['ecg_id', 'idMedServ', 'patientId', 'result']
 
     field_list = request.GET.get('fields', '').split(',')
-    requested_fields = ['id']
+    requested_fields = check_and_return_correct_fields(
+        field_list, permitted_fields)
+    requested_fields.insert(0, "id")
 
-    if 'ecg_id' in field_list:
-        query = query.select_related("ecg_id")
-        requested_fields.append('ecg_id')
+    q = q.values(*requested_fields)
 
-    if 'idMedServ' in field_list:
-        requested_fields.append('idMedServ')
+    part = request.GET.get('part', '').split(',')
+    q = take_part_from_QuerySet(q, part)
 
-    if 'patientId' in field_list:
-        requested_fields.append('patientId')
-
-    if 'result' in field_list:
-        requested_fields.append('result')
-
-    return JsonResponse(list(query.values(*requested_fields)), safe=False)
+    return JsonResponse(list(q), safe=False)
 
 
 def api_access_groups_list(request: HttpRequest):
-    query = access_groups.objects
+    q = access_groups.objects
+
+    permitted_fields = ['name', 'description']
 
     field_list = request.GET.get('fields', '').split(',')
-    requested_fields = ['id']
+    requested_fields = check_and_return_correct_fields(
+        field_list, permitted_fields)
+    requested_fields.insert(0, "id")
 
-    if 'name' in field_list:
-        requested_fields.append('name')
+    q = q.values(*requested_fields)
 
-    if 'description' in field_list:
-        requested_fields.append('description')
+    part = request.GET.get('part', '').split(',')
+    q = take_part_from_QuerySet(q, part)
 
-    return JsonResponse(list(query.values(*requested_fields)), safe=False)
+    return JsonResponse(list(q), safe=False)
 
 
 def view_file(request: HttpRequest, id: int):
