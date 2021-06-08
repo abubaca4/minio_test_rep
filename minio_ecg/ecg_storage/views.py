@@ -7,6 +7,8 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 
+from oauth2_provider.decorators import protected_resource
+
 from .models import ecg
 from .models import ecg_files
 from .models import patients
@@ -292,7 +294,7 @@ def edit_patient(request: HttpRequest, id: int):
 
 
 @csrf_exempt
-@login_required
+@protected_resource()
 def api_edit_patient(request: HttpRequest, id: int):
     patient = get_object_or_404(patients, id=id)
     if request.method == 'POST':
@@ -325,7 +327,7 @@ def edit_file(request: HttpRequest, id: int):
 
 
 @csrf_exempt
-@login_required
+@protected_resource()
 def api_edit_ecg_file(request: HttpRequest, id: int):
     file_obj = get_object_or_404(ecg_files, id=id)
     if request.method == 'POST':
@@ -355,7 +357,7 @@ def edit_ecg(request: HttpRequest, id: int):
 
 
 @csrf_exempt
-@login_required
+@protected_resource()
 def api_edit_ecg(request: HttpRequest, id: int):
     ecg_inst = get_object_or_404(ecg, id=id)
     if request.method == 'POST':
@@ -369,7 +371,7 @@ def api_edit_ecg(request: HttpRequest, id: int):
 
 
 @csrf_exempt
-@login_required
+@protected_resource()
 def api_edit_original_information(request: HttpRequest, id: int):
     or_inf = get_object_or_404(original_information, id=id)
     if request.method == 'POST':
@@ -397,7 +399,7 @@ def add_ecg_file(request: HttpRequest):
 
 
 @csrf_exempt
-@login_required
+@protected_resource()
 def api_add_ecg_file(request: HttpRequest):
     if request.method == 'POST':
         form = FileUploadForm(request.POST)
@@ -431,7 +433,7 @@ def add_patient(request: HttpRequest):
 
 
 @csrf_exempt
-@login_required
+@protected_resource()
 def api_add_patient(request: HttpRequest):
     if request.method == 'POST':
         form = PatientForm(request.POST)
@@ -463,7 +465,7 @@ def add_ecg(request: HttpRequest):
 
 
 @csrf_exempt
-@login_required
+@protected_resource()
 def api_add_ecg(request: HttpRequest):
     if request.method == 'POST':
         form = EcgForm(request.POST)
@@ -480,7 +482,7 @@ def api_add_ecg(request: HttpRequest):
 
 
 @csrf_exempt
-@login_required
+@protected_resource()
 def api_add_original_information(request: HttpRequest):
     if request.method == 'POST':
         form = OriginalInformation(request.POST)
