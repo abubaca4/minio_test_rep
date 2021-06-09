@@ -254,13 +254,15 @@ def view_ecg(request: HttpRequest, id: int):
 
 def api_ecg_info(request: HttpRequest, id: int):
     ecg_inst = get_object_or_404(ecg, id=id)
+    files = ecg_files.objects.filter(ecg_id=ecg_inst.id)
     return JsonResponse({'check_date': ecg_inst.check_date,
                          'add_date': ecg_inst.add_date,
                          'patient_age': ecg_inst.patient_age,
                          'patient_id': ecg_inst.patient_id_id,
                          'source_user': ecg_inst.source_user_id,
                          'access_id': ecg_inst.access_id_id,
-                         'org_id': ecg_inst.org_id_id})
+                         'org_id': ecg_inst.org_id_id,
+                         'files': list(files.values('id', 'format', 'original_name'))}, safe=False)
 
 
 def api_source_org_info(request: HttpRequest, id: int):
